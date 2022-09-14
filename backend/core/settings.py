@@ -13,20 +13,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-<<<<<<< HEAD
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
-=======
-SECRET_KEY = env(
-    "SECRET_KEY",
-    default="django-insecure-)c6r+c&1r&&-d#ma(^f5k=g5mx*z256q&ipwczhf_=qqk0ze=i",
-)
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=True)
->>>>>>> 8a18003 (Deployment | Create Config using Environment Variables)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -124,7 +114,6 @@ USE_TZ = env.bool("USE_TZ", default=False)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-<<<<<<< HEAD
 # STATIC_URL = env("STATIC_URL")
 USE_S3 = env.bool("USE_S3", default=False)
 
@@ -154,10 +143,6 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
     STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
-=======
-STATIC_URL = env("STATIC_URL")
-
->>>>>>> 8a18003 (Deployment | Create Config using Environment Variables)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

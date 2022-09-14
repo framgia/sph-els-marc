@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Category
+from .models import Category, Word
 
 # Test the model named Category
 class CategoryModelTest(TestCase):
@@ -38,3 +38,36 @@ class CategoryModelTest(TestCase):
     def test_get_absolute_url(self):
         category = Category.objects.get(id=1)
         self.assertEquals(category.get_absolute_url(), "/category/1")
+
+
+# test the model named Word
+class WordModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Category.objects.create(
+            category_name="test_category_name",
+            category_description="test_category_description",
+        )
+        Word.objects.create(
+            word_text="test_word_text",
+            category=Category.objects.get(id=1),
+        )
+
+    def test_word_text_label(self):
+        word = Word.objects.get(id=1)
+        field_label = word._meta.get_field("word_text").verbose_name
+        self.assertEquals(field_label, "word text")
+
+    def test_word_text_max_length(self):
+        word = Word.objects.get(id=1)
+        max_length = word._meta.get_field("word_text").max_length
+        self.assertEquals(max_length, 255)
+
+    def test_object_name_is_word_text(self):
+        word = Word.objects.get(id=1)
+        expected_object_name = word.word_text
+        self.assertEquals(expected_object_name, str(word))
+
+    def test_get_absolute_url(self):
+        word = Word.objects.get(id=1)
+        self.assertEquals(word.get_absolute_url(), "/word/1")
