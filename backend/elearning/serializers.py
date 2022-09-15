@@ -34,3 +34,46 @@ class CategorySerializer(serializers.ModelSerializer):
             "date_updated",
             "words",
         )
+
+    def create(self, validated_data):
+        words_data = validated_data.pop("words")
+        category = Category.objects.create(**validated_data)
+        for word_data in words_data:
+            Word.objects.create(category=category, **word_data)
+        return category
+
+    def update(self, instance, validated_data):
+        words_data = validated_data.pop("words")
+        words = (instance.words).all()
+        words = list(words)
+        instance.category_name = validated_data.get(
+            "category_name", instance.category_name
+        )
+        instance.category_description = validated_data.get(
+            "category_description", instance.category_description
+        )
+        instance.num_items = validated_data.get("num_items", instance.num_items)
+        instance.save()
+        for word_data in words_data:
+            word = words.pop(0)
+            word.word_text = word_data.get("word_text", word.word_text)
+            word.save()
+        return instance
+
+    def partial_update(self, instance, validated_data):
+        words_data = validated_data.pop("words")
+        words = (instance.words).all()
+        words = list(words)
+        instance.category_name = validated_data.get(
+            "category_name", instance.category_name
+        )
+        instance.category_description = validated_data.get(
+            "category_description", instance.category_description
+        )
+        instance.num_items = validated_data.get("num_items", instance.num_items)
+        instance.save()
+        for word_data in words_data:
+            word = words.pop(0)
+            word.word_text = word_data.get("word_text", word.word_text)
+            word.save()
+        return instance
