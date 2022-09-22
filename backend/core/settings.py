@@ -30,6 +30,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "rest_framework",
+    "drf_yasg",
+    "elearning",
+    "api",
 ]
 
 MIDDLEWARE = [
