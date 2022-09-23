@@ -24,9 +24,7 @@ class Word(models.Model):
     word_text = models.CharField(max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="words"
-    )
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="words")
 
     def get_absolute_url(self):
         return f"/word/{self.id}"
