@@ -139,5 +139,5 @@ GitHub.sublime-settings
 # collectstatic output
 static/
 
-# ignore docs for now
-docs/
+# ignore scripts
+setup.sh

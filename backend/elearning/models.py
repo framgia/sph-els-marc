@@ -1,10 +1,8 @@
 from django.db import models
-
-# using signals, increment num_items in Category when a Word is created
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
-# create a model named Category with plural_name Categories, have fields category_name category_description num_items date_created date_updated
+
 class Category(models.Model):
     category_name = models.CharField(max_length=255)
     category_description = models.TextField()
@@ -22,7 +20,6 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 
-# create a model named Word with plural_name Words, have fields word_text date_created date_updated, have one-to-many relationship with Category
 class Word(models.Model):
     word_text = models.CharField(max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
