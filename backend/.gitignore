@@ -141,6 +141,3 @@ static/
 
 # ignore scripts
 setup.sh
-
-# ignore migrations for now
-!*/migrations/__init__.py
