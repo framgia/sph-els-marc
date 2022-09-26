@@ -1,9 +1,11 @@
 from django.db import models
 from django.test import TestCase
 from django.urls import reverse
-from elearning.models import Category as Cat
+
 from rest_framework import status
 from rest_framework.test import APITestCase
+
+from elearning.models import Category as Cat
 
 
 class APITests(APITestCase):

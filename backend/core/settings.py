@@ -1,6 +1,7 @@
-from pathlib import Path
-import environ
 import os
+from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,18 +23,17 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
-INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
+LOCAL_APPS = [
+    "elearning",
+    "profile",
+    "api",
+]
+
+THIRD_PARTY_APPS = [
+    "rest_framework",
     "django_extensions",
     "rest_framework",
     "drf_yasg",
-    "elearning",
-    "profile",
     "corsheaders",
     "rest_framework.authtoken",
     "django.contrib.sites",
@@ -42,8 +42,21 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "dj_rest_auth.registration",
-    "api",
 ]
+
+INSTALLED_APPS = (
+    [
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+    ]
+    + LOCAL_APPS
+    + THIRD_PARTY_APPS
+)
+
 
 SITE_ID = 1  # django.contrib.sites settings
 

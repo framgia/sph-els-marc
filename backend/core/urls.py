@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django.urls import path, include
-from dj_rest_auth.views import PasswordResetConfirmView
+from django.urls import include, path
 
+from dj_rest_auth.views import PasswordResetConfirmView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
