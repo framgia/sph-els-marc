@@ -1,7 +1,8 @@
 from django.test import TestCase
+
 from .models import Category, Word
 
-# Test the model named Category
+
 class CategoryModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -40,7 +41,6 @@ class CategoryModelTest(TestCase):
         self.assertEquals(category.get_absolute_url(), "/category/1")
 
 
-# test the model named Word
 class WordModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):

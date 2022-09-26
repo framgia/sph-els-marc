@@ -1,10 +1,9 @@
-from rest_framework.routers import SimpleRouter
-
-from elearning.views import CategoryViewSet, WordViewSet
-from drf_yasg.views import get_schema_view
+from django.urls import include, path
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from elearning.views import CategoryViewSet, WordViewSet
 from rest_framework import permissions
-from django.urls import path, include
+from rest_framework.routers import SimpleRouter
 
 schema_view = get_schema_view(
     openapi.Info(

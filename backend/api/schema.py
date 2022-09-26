@@ -1,4 +1,3 @@
-# import SwaggerAutoSchema
 from drf_yasg.inspectors.view import SwaggerAutoSchema
 
 
