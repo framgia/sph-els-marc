@@ -1,7 +1,9 @@
 # Create Serializers for User, UserProfile, and UserFollowing models.
-from rest_framework import serializers
-from .models import UserProfile, UserProfilePicture, UserFollowing, UserProfilePicture
 from django.contrib.auth.models import User
+
+from rest_framework import serializers
+
+from .models import UserFollowing, UserProfile, UserProfilePicture
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfilePictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfilePicture
-        fields = ("profile_picture", "userprofile")
+        fields = ("profile_picture", "user_profile")
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

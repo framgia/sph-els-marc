@@ -25,7 +25,7 @@ ALLOWED_HOSTS = ["*"]
 
 LOCAL_APPS = [
     "elearning",
-    "profile",
+    "eprofile",
     "api",
 ]
 

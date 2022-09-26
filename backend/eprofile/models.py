@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 def upload_to(instance, filename):
     return "profile_pictures/{username}/{filename}".format(
-        username=instance.userprofile.user.username, filename=filename
+        username=instance.user_profile.user.username, filename=filename
     )
 
 
@@ -24,20 +24,20 @@ class UserProfile(models.Model):
 
 
 class UserProfilePicture(models.Model):
-    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     profile_picture = models.ImageField(
         upload_to=upload_to, default="profile_pictures/default.png"
     )
 
     def __str__(self):
-        return f"{self.userprofile.user.username} Profile Picture"
+        return f"{self.user_profile.user.username} Profile Picture"
 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        userprofile = UserProfile.objects.create(user=instance)
-        UserProfilePicture.objects.create(userprofile=userprofile)
+        user_profile = UserProfile.objects.create(user=instance)
+        UserProfilePicture.objects.create(user_profile=user_profile)
 
 
 class UserFollowing(models.Model):

@@ -1,9 +1,3 @@
-from profile.views import (
-    UserFollowingViewSet,
-    UserProfilePictureUploadView,
-    UserProfileViewSet,
-)
-
 from django.urls import include, path
 
 from drf_yasg import openapi
@@ -12,6 +6,11 @@ from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
 
 from elearning.views import CategoryViewSet, WordViewSet
+from eprofile.views import (
+    UserFollowingViewSet,
+    UserProfilePictureUploadView,
+    UserProfileViewSet,
+)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -52,7 +51,7 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    path("profile/", include("profile.urls", namespace="profile")),
+    path("profile/", include("eprofile.urls", namespace="profile")),
     path("profile/<int:id>/picture/", UserProfilePictureUploadView.as_view()),
 ]
 

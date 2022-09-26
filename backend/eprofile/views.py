@@ -48,10 +48,7 @@ class UserProfilePictureUploadView(APIView):
         name="upload-profile-picture",
     )
     def post(self, request, id, format=None):
-        print(request.data)
-        request.data["userprofile"] = id
-        print(request.data)
-
+        request.data["user_profile"] = id
         serializer = UserProfilePictureSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
