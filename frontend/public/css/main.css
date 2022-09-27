@@ -1,0 +1,26 @@
+/**
+* This is a valid CSS file.
+**/
+.red-bg-200 {
+  background-color: #ffcbc0;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.show {
+  opacity: 1;
+  animation: scale-up-horizontal-left 1.7s;
+}
+
+@keyframes scale-up-horizontal-left {
+  0% {
+    transform: scaleX(0.4);
+    transform-origin: left center;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
