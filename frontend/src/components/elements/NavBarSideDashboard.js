@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 function NavBarSideDashboard({ open, setOpen }) {
-  console.log(open);
   return (
     <div
       className={

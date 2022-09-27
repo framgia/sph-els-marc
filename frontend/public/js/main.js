@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   /** Animation using Observer */
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      console.log(entry);
       if (entry.isIntersecting) {
         entry.target.classList.add(".show");
       } else {
@@ -13,5 +12,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const hiddenElements = document.querySelectorAll(".hidden");
   hiddenElements.forEach((el) => observer.observe(el));
-  console.log("main.js loaded");
 });
