@@ -25,12 +25,11 @@ ALLOWED_HOSTS = ["*"]
 
 LOCAL_APPS = [
     "elearning",
-    "profile",
+    "eprofile",
     "api",
 ]
 
 THIRD_PARTY_APPS = [
-    "rest_framework",
     "django_extensions",
     "rest_framework",
     "drf_yasg",

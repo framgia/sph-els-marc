@@ -42,9 +42,7 @@ class CategorySerializer(serializers.ModelSerializer):
         words_data = validated_data.pop("words")
         words = (instance.words).all()
         words = list(words)
-        instance.category_name = validated_data.get(
-            "category_name", instance.category_name
-        )
+        instance.category_name = validated_data.get("category_name", instance.category_name)
         instance.category_description = validated_data.get(
             "category_description", instance.category_description
         )

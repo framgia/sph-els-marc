@@ -4,7 +4,8 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
+!*media/profile_pictures/default*
+media/
 
 # Backup files # 
 *.bak 
@@ -141,3 +142,5 @@ static/
 
 # ignore scripts
 setup.sh
+
+.isort.cfg
