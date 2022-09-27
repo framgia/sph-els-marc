@@ -9,6 +9,10 @@
   opacity: 0;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .show {
   opacity: 1;
   animation: scale-up-horizontal-left 1.7s;

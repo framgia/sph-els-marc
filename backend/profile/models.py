@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 def upload_to(instance, filename):
     return "profile_pictures/{username}/{filename}".format(
-        username=instance.user_profile.user.username, filename=filename
+        username=instance.userprofile.user.username, filename=filename
     )
 
 
@@ -24,20 +24,20 @@ class UserProfile(models.Model):
 
 
 class UserProfilePicture(models.Model):
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     profile_picture = models.ImageField(
         upload_to=upload_to, default="profile_pictures/default.png"
     )
 
     def __str__(self):
-        return f"{self.user_profile.user.username} Profile Picture"
+        return f"{self.userprofile.user.username} Profile Picture"
 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        user_profile = UserProfile.objects.create(user=instance)
-        UserProfilePicture.objects.create(user_profile=user_profile)
+        userprofile = UserProfile.objects.create(user=instance)
+        UserProfilePicture.objects.create(userprofile=userprofile)
 
 
 class UserFollowing(models.Model):
@@ -50,16 +50,25 @@ class UserFollowing(models.Model):
     def __str__(self):
         return self.follower.username + " follows " + self.following.username
 
-    def save(self, *args, **kwargs):
-        self.follower.following_count += 1
-        self.follower.save()
-        self.following.follower_count += 1
-        self.following.save()
-        super().save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        self.follower.following_count -= 1
-        self.follower.save()
-        self.following.follower_count -= 1
-        self.following.save()
-        super().delete(*args, **kwargs)
+# Create a signal to update follower_count and following_count everytime a UserFollowing is created.
+
+
+@receiver(post_save, sender=UserFollowing)
+def update_follower_count(sender, instance, created, **kwargs):
+    if created:
+        instance.following.follower_count += 1
+        instance.following.save()
+        instance.follower.following_count += 1
+        instance.follower.save()
+
+
+# Create a signal to update follower_count and following_count everytime a UserFollowing is deleted.
+
+
+@receiver(post_delete, sender=UserFollowing)
+def update_follower_count(sender, instance, **kwargs):
+    instance.following.follower_count -= 1
+    instance.following.save()
+    instance.follower.following_count -= 1
+    instance.follower.save()

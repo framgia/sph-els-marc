@@ -25,6 +25,7 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),  # TODO: Harden this permission later
 )
 
+
 schema_view = get_schema_view(
     openapi.Info(
         title="eLearning API",

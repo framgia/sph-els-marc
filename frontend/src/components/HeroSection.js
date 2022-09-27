@@ -1,9 +1,9 @@
-import NavBarDashboard from "./elements/NavBarDashboard";
+import NavBarLanding from "./elements/NavBarLanding";
 
 function HeroSection() {
   return (
     <section id="action" className="pb-24 position-relative overflow-hidden">
-      <NavBarDashboard />
+      <NavBarLanding />
       <div className="container mt-12">
         <div className="row">
           <div className="col-12 col-lg-5">
