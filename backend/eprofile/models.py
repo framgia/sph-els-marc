@@ -50,25 +50,16 @@ class UserFollowing(models.Model):
     def __str__(self):
         return self.follower.user.username + " follows " + self.following.user.username
 
+    def save(self, *args, **kwargs):
+        self.follower.following_count += 1
+        self.follower.save()
+        self.following.follower_count += 1
+        self.following.save()
+        super().save(*args, **kwargs)
 
-# Create a signal to update follower_count and following_count everytime a UserFollowing is created.
-
-
-@receiver(post_save, sender=UserFollowing)
-def update_follower_count(sender, instance, created, **kwargs):
-    if created:
-        instance.following.follower_count += 1
-        instance.following.save()
-        instance.follower.following_count += 1
-        instance.follower.save()
-
-
-# Create a signal to update follower_count and following_count everytime a UserFollowing is deleted.
-
-
-@receiver(post_delete, sender=UserFollowing)
-def update_follower_count(sender, instance, **kwargs):
-    instance.following.follower_count -= 1
-    instance.following.save()
-    instance.follower.following_count -= 1
-    instance.follower.save()
+    def delete(self, *args, **kwargs):
+        self.follower.following_count -= 1
+        self.follower.save()
+        self.following.follower_count -= 1
+        self.following.save()
+        super().delete(*args, **kwargs)

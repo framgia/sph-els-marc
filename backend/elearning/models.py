@@ -35,15 +35,12 @@ class Word(models.Model):
     class Meta:
         verbose_name_plural = "Words"
 
+    def save(self, *args, **kwargs):
+        self.category.num_items += 1
+        self.category.save()
+        super().save(*args, **kwargs)
 
-@receiver(post_save, sender=Word)
-def increment_num_items(sender, instance, created, **kwargs):
-    if created:
-        instance.category.num_items += 1
-        instance.category.save()
-
-
-@receiver(post_delete, sender=Word)
-def decrement_num_items(sender, instance, **kwargs):
-    instance.category.num_items -= 1
-    instance.category.save()
+    def delete(self, *args, **kwargs):
+        self.category.num_items -= 1
+        self.category.save()
+        super().delete(*args, **kwargs)
