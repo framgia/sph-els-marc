@@ -50,7 +50,6 @@ class UserFollowing(models.Model):
     def __str__(self):
         return self.follower.user.username + " follows " + self.following.user.username
 
-
     def save(self, *args, **kwargs):
         self.follower.following_count += 1
         self.follower.save()
