@@ -48,7 +48,7 @@ class UserFollowing(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.follower.user.username + " follows " + self.following.user.username
+        return self.follower.username + " follows " + self.following.username
 
     def save(self, *args, **kwargs):
         self.follower.following_count += 1

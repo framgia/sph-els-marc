@@ -1,4 +1,3 @@
-# Create Serializers for User, UserProfile, and UserFollowing models.
 from django.contrib.auth.models import User
 
 from rest_framework import serializers

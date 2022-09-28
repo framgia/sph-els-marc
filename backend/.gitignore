@@ -142,5 +142,4 @@ static/
 
 # ignore scripts
 setup.sh
-
 .isort.cfg
