@@ -270,3 +270,5 @@ ACCOUNT_EMAIL_VERIFICATION = "optional"
 # Emails
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+DRF_TYPED_VIEWS = {"schema_packages": ["pydantic"]}

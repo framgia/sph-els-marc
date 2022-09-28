@@ -54,8 +54,13 @@ class UserFollowingViewSet(viewsets.ModelViewSet):
                     "message": f"Following deleted",
                 }
             else:
-                print(serializer.errors["non_field_errors"][0])
-                print(serializer.data)
+                return Response(
+                    serializer.errors["non_field_errors"][0],
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
             return Response(content, status=status.HTTP_204_NO_CONTENT)
         except UserFollowing.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                serializer.errors["non_field_errors"][0],
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

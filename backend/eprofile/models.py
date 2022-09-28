@@ -18,6 +18,8 @@ class UserProfile(models.Model):
     is_profile_updated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    lessons_learned = models.IntegerField(default=0)
+    words_learned = models.IntegerField(default=0)
 
     class Meta:
         db_table = "eprofile_user_profile"
@@ -27,6 +29,7 @@ class UserProfile(models.Model):
 
 
 class UserProfilePicture(models.Model):
+
     user_profile = models.OneToOneField(
         UserProfile, on_delete=models.CASCADE, related_name="user_profile_picture"
     )
@@ -41,13 +44,6 @@ class UserProfilePicture(models.Model):
 
     def __str__(self):
         return f"{self.user_profile.user.username} Profile Picture"
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        user_profile = UserProfile.objects.create(user=instance)
-        UserProfilePicture.objects.create(user_profile=user_profile)
 
 
 class UserFollowing(models.Model):
@@ -78,3 +74,10 @@ class UserFollowing(models.Model):
         self.following.follower_count -= 1
         self.following.save()
         super().delete(*args, **kwargs)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        user_profile = UserProfile.objects.create(user=instance)
+        UserProfilePicture.objects.create(user_profile=user_profile)
