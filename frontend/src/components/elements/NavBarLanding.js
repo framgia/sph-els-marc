@@ -12,7 +12,7 @@ function NavBarLanding() {
       <nav className="navbar py-10 navbar-expand-lg navbar-light bg-transparent">
         <div className="container">
           <Link to="/" className="navbar-brand">
-            <img src="images/neuword-logo.svg" alt="" width={160} />
+            <img src="/images/neuword-logo.svg" alt="" width={160} />
           </Link>
           <button
             className="btn p-0 d-lg-none navbar-burger"

@@ -18,26 +18,32 @@ class UserProfile(models.Model):
     is_profile_updated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    lessons_learned = models.IntegerField(default=0)
+    words_learned = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = "eprofile_user_profile"
 
     def __str__(self):
         return self.user.username
 
 
 class UserProfilePicture(models.Model):
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    user_profile = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE, related_name="user_profile_picture"
+    )
     profile_picture = models.ImageField(
         upload_to=upload_to, default="profile_pictures/default.png"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "eprofile_user_profile_picture"
 
     def __str__(self):
         return f"{self.user_profile.user.username} Profile Picture"
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        user_profile = UserProfile.objects.create(user=instance)
-        UserProfilePicture.objects.create(user_profile=user_profile)
 
 
 class UserFollowing(models.Model):
@@ -49,6 +55,11 @@ class UserFollowing(models.Model):
 
     def __str__(self):
         return self.follower.username + " follows " + self.following.username
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["follower", "following"], name="unique_followers")
+        ]
 
     def save(self, *args, **kwargs):
         self.follower.following_count += 1
@@ -63,3 +74,10 @@ class UserFollowing(models.Model):
         self.following.follower_count -= 1
         self.following.save()
         super().delete(*args, **kwargs)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        user_profile = UserProfile.objects.create(user=instance)
+        UserProfilePicture.objects.create(user_profile=user_profile)
