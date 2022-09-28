@@ -1,8 +1,5 @@
-import { useState } from "react";
-import React from "react";
-
+import React, { useState } from "react";
 import { Routes, Route, Navigate, useParams, Outlet } from "react-router-dom";
-
 import LandingPage from "./pages/landing/LandingPage";
 import HttpCodePage from "./pages/http-code/HttpCodePage";
 import DashboardPage from "./pages/dashboard/DashboardPage";

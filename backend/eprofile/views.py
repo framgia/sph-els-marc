@@ -57,12 +57,6 @@ class UserProfilePictureUploadView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def get_csrf(request):
-    response = JsonResponse({"Info": "Success - Set CSRF cookie"})
-    response["X-CSRFToken"] = get_token(request)
-    return response
-
-
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all().order_by("-created_at")
     serializer_class = UserProfileSerializer

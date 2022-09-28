@@ -1,13 +1,37 @@
 import NavBarLanding from "../../components/elements/NavBarLanding";
 import NavBarSideLanding from "../../components/elements/NavBarSideLanding";
 import Footer from "../../components/Footer";
-import { Link } from "react-router-dom";
-import { withFormik, Form, Field } from "formik";
-import { getCSRFToken, submitLogin } from "../../services/client/base";
+import { Link, Navigate } from "react-router-dom";
+import { useFormik } from "formik";
+import { login } from "../../actions/auth";
+import { useSelector, useDispatch } from "react-redux";
 import * as Yup from "yup";
 
-const LogInPage = (props) => {
-  const { touched, errors } = props;
+const LoginPage = () => {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+
+  const dispatch = useDispatch();
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema: Yup.object().shape({
+      username: Yup.string().required("Username is required"),
+      password: Yup.string().required("Password is required"),
+    }),
+    onSubmit: (values) => {
+      const { username, password } = values;
+      dispatch(login(username, password));
+    },
+  });
+
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <>
       <NavBarLanding />
@@ -29,84 +53,72 @@ const LogInPage = (props) => {
               Log in to your account
             </h2>
             <p className="mb-6 lh-lg">Please enter your details to proceed.</p>
-            <Form className="text-start" action="">
-              <label className="d-block mb-6">
-                <span className="small">Username</span>
-                <Field
-                  type="text"
-                  className="form-control mt-2"
-                  name="username"
-                  placeholder="Your username"
-                />
-                {touched.username && errors.username && (
-                  <span className="help-block text-danger">
-                    {errors.username}
-                  </span>
-                )}
-              </label>
-              <label className="d-block mb-4">
-                <span className="small">Password</span>
-                <Field
-                  type="password"
-                  className="form-control mt-2"
-                  name="password"
-                  placeholder="Your password"
-                />
-                {touched.password && errors.password && (
-                  <span className="help-block text-danger">
-                    {errors.password}
-                  </span>
-                )}
-              </label>
-              <label className="d-flex mb-6">
-                <span style={{ fontSize: 12 }}>
-                  <span>By signing up, you agree to our </span>
-                  <a className="text-decoration-none" href="#login">
-                    Terms, Data Policy, and Cookies Policy.
-                  </a>
-                </span>
-              </label>
-              <button type="submit" className="btn btn-dark d-block mb-4">
-                Sign In
-              </button>
-              <span className="text-center d-block" style={{ fontSize: 12 }}>
-                <span>Don’t have an account? </span>
-                <Link to={"/register"} className="text-decoration-none">
-                  Sign Up
-                </Link>
-              </span>
-            </Form>
           </div>
+          <form
+            className="text-start mx-auto"
+            style={{ width: 300 }}
+            onSubmit={formik.handleSubmit}
+          >
+            <label className="d-block mb-6">
+              <span className="small">Username</span>
+              <input
+                type="text"
+                className="form-control mt-2"
+                name="username"
+                placeholder="Your username"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.username}
+              />
+            </label>
+            {formik.touched.username && formik.errors.username ? (
+              <span className="error">{formik.errors.username}</span>
+            ) : null}
+            <label className="d-block mb-4">
+              <span className="small">Password</span>
+              <input
+                type="password"
+                className="form-control mt-2"
+                name="password"
+                placeholder="Your password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+            </label>
+            {formik.touched.password && formik.errors.password ? (
+              <span className="error">{formik.errors.password}</span>
+            ) : null}
+            <label className="d-flex mb-6">
+              <span style={{ fontSize: 12 }}>
+                <span>By signing up, you agree to our </span>
+                <a className="text-decoration-none" href="#login">
+                  Terms, Data Policy, and Cookies Policy.
+                </a>
+              </span>
+            </label>
+            {message && (
+              <div className="form-group">
+                <div className="alert alert-danger" role="alert">
+                  {message}
+                </div>
+              </div>
+            )}
+            <button type="submit" className="btn btn-dark d-block mb-4">
+              Sign In
+            </button>
+            <span className="text-center d-block" style={{ fontSize: 12 }}>
+              <span>Don’t have an account? </span>
+              <Link to={"/register"} className="text-decoration-none">
+                Sign Up
+              </Link>
+            </span>
+          </form>
         </div>
       </section>
-
       <Footer />
     </>
   );
 };
 
-const LoginFormik = withFormik({
-  mapPropsToValues: (props) => {
-    return {
-      username: props.username || "",
-      password: props.password || "",
-    };
-  },
-  validationSchema: Yup.object().shape({
-    username: Yup.string().required("Username is required"),
-    password: Yup.string().required("Password is required"),
-  }),
-  handleSubmit: async (values) => {
-    const { username, password } = values;
-
-    try {
-      const csrf = await getCSRFToken();
-      //eslint-disable-next-line
-      const resp = await submitLogin(csrf, username, password);
-    } catch (err) {
-      console.error(err);
-    }
-  },
-})(LogInPage);
-
-export default LoginFormik;
+export default LoginPage;

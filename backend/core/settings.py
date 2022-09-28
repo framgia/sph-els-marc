@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "drf_yasg",
     "corsheaders",
+    "rest_framework",
     "rest_framework.authtoken",
     "django.contrib.sites",
     "dj_rest_auth",
@@ -74,18 +75,24 @@ MIDDLEWARE = [
 # CORS Settings
 
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
     "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
     "http://localhost:8000",
+    "http://localhost:3000",
 ]
 
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
-
+CSRF_COOKIE_NAME = "XSRF-TOKEN"
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 CORS_ALLOW_CREDENTIALS = True
 

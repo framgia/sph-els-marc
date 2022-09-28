@@ -25,20 +25,6 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),  # TODO: Harden this permission later
 )
 
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="eLearning API",
-        default_version="v1",
-        description="A simple API for managing eLearning",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="email@email.com"),
-        license=openapi.License(name="BSD License"),
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),  # TODO: Harden this permission later
-)
-
 router = SimpleRouter()
 
 router.register("category", CategoryViewSet, basename="category")
