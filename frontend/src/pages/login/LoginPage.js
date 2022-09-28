@@ -119,6 +119,7 @@ const LoginPage = () => {
       <Footer />
     </>
   );
+
 };
 
 export default LoginPage;

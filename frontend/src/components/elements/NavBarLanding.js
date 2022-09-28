@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import NavBarSideLanding from "./NavBarSideLanding";
+import { useSelector } from "react-redux";
 
 function NavBarLanding() {
   const [open, setOpen] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   return (
     <>
@@ -50,12 +52,25 @@ function NavBarLanding() {
               </li>
             </ul>
             <div className="ms-auto">
-              <Link to="/login" className="btn">
-                Log In
-              </Link>
-              <Link to="/register" className="btn btn-dark mt-3 mt-md-0">
-                Sign Up
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link to="/dashboard" className="btn btn-dark me-3">
+                    Dashboard
+                  </Link>
+                  <Link to="/logout" className="btn btn-dark">
+                    Logout
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-dark me-3">
+                    Login
+                  </Link>
+                  <Link to="/register" className="btn btn-dark mt-3 mt-md-0">
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

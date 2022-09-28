@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function NavBarSideDashboard({ open, setOpen }) {
+  const { isLoggedIn } = useSelector((state) => state.auth);
   return (
     <div
       className={
@@ -48,12 +50,25 @@ function NavBarSideDashboard({ open, setOpen }) {
         </div>
         <div className="mt-auto">
           <div className="py-6">
-            <Link to="/login" className="btn w-100 mb-4">
-              Log In
-            </Link>
-            <Link to="/register" className="btn btn-dark w-100">
-              Sign Up
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link to="/dashboard" className="btn btn-dark w-100 mb-3">
+                  Dashboard
+                </Link>
+                <Link to="/logout" className="btn btn-dark w-100">
+                  Logout
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn-dark w-100 mb-3">
+                  Login
+                </Link>
+                <Link to="/register" className="btn btn-dark w-100">
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>

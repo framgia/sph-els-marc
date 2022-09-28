@@ -29,7 +29,6 @@ class CategorySerializer(serializers.ModelSerializer):
             "date_updated",
             "words",
         )
-        read_only_fields = ("num_items",)
 
     def create(self, validated_data):
         words_data = validated_data.pop("words")

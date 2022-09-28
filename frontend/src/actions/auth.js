@@ -16,10 +16,9 @@ export const register =
         dispatch({
           type: REGISTER_SUCCESS,
         });
-
         dispatch({
           type: SET_MESSAGE,
-          payload: response.data.message,
+          payload: "Registration Complete!",
         });
 
         return Promise.resolve();
@@ -66,6 +65,19 @@ export const login = (username, password) => (dispatch) => {
       });
 
       return Promise.reject();
+    }
+  );
+};
+
+export const logout = () => (dispatch) => {
+  AuthService.logout().then(
+    () => {
+      dispatch({
+        type: LOGOUT,
+      });
+    },
+    (error) => {
+      console.error(error);
     }
   );
 };

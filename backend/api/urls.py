@@ -12,6 +12,8 @@ from eprofile.views import (
     UserProfileViewSet,
 )
 
+from .views import CSRFView
+
 schema_view = get_schema_view(
     openapi.Info(
         title="eLearning API",
@@ -40,6 +42,7 @@ urlpatterns = [
     ),
     path("profile/", include("eprofile.urls", namespace="profile")),
     path("profile/<int:id>/picture/", UserProfilePictureUploadView.as_view()),
+    path("csrf/", CSRFView.as_view()),
 ]
 
 urlpatterns += router.urls
