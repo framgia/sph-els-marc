@@ -1,13 +1,8 @@
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
-from django.shortcuts import get_object_or_404, render
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 

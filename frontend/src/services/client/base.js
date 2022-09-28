@@ -19,7 +19,7 @@ const submitLogin = async (user, pass) => {
   }
 };
 
-const submitRegister = async (user, pass1, pass2, email) => {
+const submitRegister = async (user, email, pass1, pass2) => {
   const response = await axiosClient.post("dj-rest-auth/registration/", {
     username: user,
     password1: pass1,
@@ -36,6 +36,8 @@ const getLoggedInInfo = async () => {
 
 const submitLogout = async () => {
   const response = await axiosClient.post("dj-rest-auth/logout/");
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
   return response;
 };
 

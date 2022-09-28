@@ -11,7 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "first_name",
             "last_name",
+            "is_superuser",
+            "username",
+            "email",
         )
+        read_only_fields = ("username", "is_superuser", "email")
 
 
 class UserProfilePictureSerializer(serializers.ModelSerializer):
@@ -37,6 +41,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "follower_count",
             "following_count",
             "is_profile_updated",
+            "profile_picture",
         )
 
     def update(self, instance, validated_data):
