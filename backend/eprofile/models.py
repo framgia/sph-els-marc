@@ -19,15 +19,25 @@ class UserProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        db_table = "eprofile_user_profile"
+
     def __str__(self):
         return self.user.username
 
 
 class UserProfilePicture(models.Model):
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE, related_name="user_profile_picture"
+    )
     profile_picture = models.ImageField(
         upload_to=upload_to, default="profile_pictures/default.png"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "eprofile_user_profile_picture"
 
     def __str__(self):
         return f"{self.user_profile.user.username} Profile Picture"
@@ -49,6 +59,11 @@ class UserFollowing(models.Model):
 
     def __str__(self):
         return self.follower.username + " follows " + self.following.username
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["follower", "following"], name="unique_followers")
+        ]
 
     def save(self, *args, **kwargs):
         self.follower.following_count += 1

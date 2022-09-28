@@ -1,33 +1,41 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import ActivityStream from "../../components/elements/ActivityStream";
+import FollowButton from "../../components/elements/FollowButton";
 import FollowerStream from "../../components/elements/FollowerStream";
 import FollowingStream from "../../components/elements/FollowingStream";
 import NavBarLanding from "../../components/elements/NavBarLanding";
 import useProfileDetails from "../../hooks/useProfileDetails";
 
-export default function DashboardPage() {
+export default function ProfilePage() {
+  const { id } = useParams();
   const user = JSON.parse(localStorage.getItem("user"));
   const views = ["Activities", "Following", "Followers"];
   const [view, setView] = useState(views[0]);
 
-  const { isLoading, userData, userPicData } = useProfileDetails(user.pk);
+  const { isLoading, userData, userPicData } = useProfileDetails(id);
+
+  if (userData.error) {
+    return <Navigate to="/404/user-not-found" replace />;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
   } else {
     const { followers, following } = userData;
+    const isFollowing = userData["followers"].find(
+      (follower) => follower.follower === user.pk
+    );
 
     return (
       <>
         <NavBarLanding />
-
-        <section id="dash" className="row">
+        <section id="profile" className="row">
           <div className="col-12 col-lg-6">
             <section className="py-6">
               <div className="container">
                 <div className="position-relative p-8 border rounded-2">
-                  <h3> Dashboard </h3>
+                  <h3> User Profile </h3>
                   <div className="mb-8 text-center">
                     <img
                       className="img-fluid rounded-2 mb-6"
@@ -133,29 +141,14 @@ export default function DashboardPage() {
                     </div>
                     <p className="mb-0">0</p>
                   </div>
-                  <Link
-                    className="text-decoration-none"
-                    to={`/profile/${userData.id}`}
-                  >
-                    <button className="btn me-4 mb-3 w-100 d-flex align-items-center justify-content-center btn-outline-primary">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={24}
-                        height={24}
-                        viewBox="0 0 24 24"
-                        className="me-2"
-                      >
-                        <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 9c2.7 0 5.8 1.29 6 2v1H6v-.99c.2-.72 3.3-2.01 6-2.01m0-11C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
-                      </svg>
-                      <span> Profile </span>
-                    </button>
-                  </Link>
-                  <button
-                    onClick={() => setView(views[0])}
-                    className="btn me-4 w-100 d-flex align-items-center justify-content-center btn-outline-primary"
-                  >
-                    <span> Feed </span>
-                  </button>
+
+                  {!(user.pk === +id) && (
+                    <FollowButton
+                      action={isFollowing ? "Unfollow" : "Follow"}
+                      follower={user.pk}
+                      following={+id}
+                    />
+                  )}
                 </div>
               </div>
             </section>

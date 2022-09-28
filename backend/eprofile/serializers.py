@@ -11,7 +11,71 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "first_name",
             "last_name",
+            "is_superuser",
+            "username",
+            "email",
         )
+        read_only_fields = ("username", "is_superuser", "email")
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="following.user.username", read_only=True)
+    first_name = serializers.CharField(source="following.user.first_name", read_only=True)
+    last_name = serializers.CharField(source="following.user.last_name", read_only=True)
+    email = serializers.CharField(source="following.user.email", read_only=True)
+    profile_picture = serializers.CharField(
+        source="following.user_profile_picture.profile_picture",
+        read_only=True,
+    )
+
+    class Meta:
+        model = UserFollowing
+        fields = (
+            "id",
+            "following",
+            "created_at",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "profile_picture",
+        )
+        read_only_fields = (
+            "id",
+            "following",
+            "created_at",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "profile_picture",
+        )
+
+
+class FollowerSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="follower.user.username", read_only=True)
+    first_name = serializers.CharField(
+        source="follower.user.first_name", read_only=True, required=False
+    )
+    last_name = serializers.CharField(source="follower.user.last_name", read_only=True)
+    email = serializers.CharField(source="follower.user.email", read_only=True)
+    profile_picture = serializers.CharField(
+        source="follower.user_profile_picture.profile_picture", read_only=True
+    )
+
+    class Meta:
+        model = UserFollowing
+        fields = (
+            "id",
+            "follower",
+            "created_at",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "profile_picture",
+        )
+        read_only_fields = ("username", "is_superuser", "email")
 
 
 class UserProfilePictureSerializer(serializers.ModelSerializer):
@@ -22,6 +86,11 @@ class UserProfilePictureSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=False)
+    profile_picture = serializers.CharField(
+        source="user_profile_picture.profile_picture", read_only=True
+    )
+    followers = serializers.SerializerMethodField()
+    following = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
@@ -32,12 +101,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "follower_count",
             "following_count",
             "is_profile_updated",
+            "following",
+            "followers",
+            "profile_picture",
         )
         read_only_fields = (
             "follower_count",
             "following_count",
             "is_profile_updated",
+            "profile_picture",
+            "followers",
+            "following",
         )
+
+    def get_following(self, obj):
+        return FollowingSerializer(obj.follower.all(), many=True).data
+
+    def get_followers(self, obj):
+        return FollowerSerializer(obj.following.all(), many=True).data
 
     def update(self, instance, validated_data):
         user_obj = User.objects.get(id=instance.user.id)

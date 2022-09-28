@@ -8,9 +8,11 @@ from rest_framework.routers import SimpleRouter
 from elearning.views import CategoryViewSet, WordViewSet
 from eprofile.views import (
     UserFollowingViewSet,
-    UserProfilePictureUploadView,
+    UserProfilePictureViewSet,
     UserProfileViewSet,
 )
+
+from .views import CSRFView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -30,6 +32,7 @@ router = SimpleRouter()
 router.register("category", CategoryViewSet, basename="category")
 router.register("word", WordViewSet, basename="word")
 router.register("profile", UserProfileViewSet, basename="profile")
+router.register("profile_picture", UserProfilePictureViewSet, basename="profile_picture")
 router.register("following", UserFollowingViewSet, basename="following")
 
 urlpatterns = [
@@ -39,7 +42,8 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("profile/", include("eprofile.urls", namespace="profile")),
-    path("profile/<int:id>/picture/", UserProfilePictureUploadView.as_view()),
+    # path("profile/<int:id>/picture/", UserProfilePictureUploadView.as_view()),
+    path("csrf/", CSRFView.as_view()),
 ]
 
 urlpatterns += router.urls

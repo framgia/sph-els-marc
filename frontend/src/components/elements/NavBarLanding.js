@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import NavBarSideLanding from "./NavBarSideLanding";
+import { useSelector } from "react-redux";
 
 function NavBarLanding() {
   const [open, setOpen] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   return (
     <>
       <nav className="navbar py-10 navbar-expand-lg navbar-light bg-transparent">
         <div className="container">
           <Link to="/" className="navbar-brand">
-            <img src="images/neuword-logo.svg" alt="" width={160} />
+            <img src="/images/neuword-logo.svg" alt="" width={160} />
           </Link>
           <button
             className="btn p-0 d-lg-none navbar-burger"
@@ -39,8 +41,8 @@ function NavBarLanding() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Community (Soon)
+                <Link to="/category/" className="nav-link">
+                  Category
                 </Link>
               </li>
               <li className="nav-item">
@@ -50,12 +52,25 @@ function NavBarLanding() {
               </li>
             </ul>
             <div className="ms-auto">
-              <Link to="/login" className="btn">
-                Log In
-              </Link>
-              <Link to="/register" className="btn btn-dark mt-3 mt-md-0">
-                Sign Up
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link to="/dashboard" className="btn btn-dark me-3">
+                    Dashboard
+                  </Link>
+                  <Link to="/logout" className="btn btn-dark">
+                    Logout
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-dark me-3">
+                    Login
+                  </Link>
+                  <Link to="/register" className="btn btn-dark mt-3 mt-md-0">
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

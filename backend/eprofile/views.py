@@ -1,17 +1,11 @@
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
-from django.shortcuts import get_object_or_404, render
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .models import UserFollowing, UserProfile
+from .models import UserFollowing, UserProfile, UserProfilePicture
 from .serializers import (
     UserFollowingSerializer,
     UserProfilePictureSerializer,
@@ -19,42 +13,12 @@ from .serializers import (
 )
 
 
-class UserProfilePictureUploadView(APIView):
+class UserProfilePictureViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
-
-    @swagger_auto_schema(
-        operation_description="Upload container excel, if the columns and data are valid. Containers will be created. "
-        "If container with such name already exists, it will be update instead",
-        operation_id="api_v1_profile_picture_upload",
-        tags=["User Profiles"],
-        manual_parameters=[
-            openapi.Parameter(
-                name="profile_picture",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_FILE,
-                required=True,
-                description="Document",
-            )
-        ],
-        responses={400: "Invalid data in uploaded file", 200: "Success"},
-    )
-    @action(
-        detail=False,
-        methods=["post"],
-        parser_classes=(
-            MultiPartParser,
-            FormParser,
-        ),
-        name="upload-profile-picture",
-    )
-    def post(self, request, id, format=None):
-        request.data["user_profile"] = id
-        serializer = UserProfilePictureSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = UserProfilePicture.objects.all().order_by("-created_at")
+    serializer_class = UserProfilePictureSerializer
+    http_method_names = ["get", "put"]
+    my_tags = ["User Profile Pictures"]
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -67,5 +31,31 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 class UserFollowingViewSet(viewsets.ModelViewSet):
     queryset = UserFollowing.objects.all().order_by("-created_at")
     serializer_class = UserFollowingSerializer
-    http_method_names = ["post", "get", "delete"]
+    http_method_names = ["post", "get"]
     my_tags = ["User Following"]
+
+    @action(detail=False, methods=["post"])
+    def delete(self, request):
+        serializer = UserFollowingSerializer(data=request.data)
+        try:
+            if (
+                serializer.is_valid()
+                or serializer.errors["non_field_errors"][0]
+                == "The fields follower, following must make a unique set."
+            ):
+                following_obj = UserFollowing.objects.get(
+                    follower=serializer.data["follower"],
+                    following=serializer.data["following"],
+                )
+                following_obj.delete()
+
+                content = {
+                    "success": "Unfollow success",
+                    "message": f"Following deleted",
+                }
+            else:
+                print(serializer.errors["non_field_errors"][0])
+                print(serializer.data)
+            return Response(content, status=status.HTTP_204_NO_CONTENT)
+        except UserFollowing.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
