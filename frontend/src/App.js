@@ -4,6 +4,7 @@ import { Routes, Route, Navigate, useParams, Outlet } from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
 import SignupPage from "./pages/signup/SignupPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
+import ProfilePage from "./pages/profile/ProfilePage";
 import { useSelector } from "react-redux";
 import { logout } from "./actions/auth";
 import { useDispatch } from "react-redux";
@@ -55,7 +56,7 @@ function App() {
       <Route path="/register/" element={<SignupPage />} />
       <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
         <Route path="/dashboard/" element={<DashboardPage />} />
-        <Route path="/profile/:id" element={<Child />} />
+        <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/category/:id" element={<Child />} />
         <Route path="/category/:id/word/:word_id/" element={<ChildTwo />} />
         <Route

@@ -1,9 +1,11 @@
 import NavBarLanding from "../../components/elements/NavBarLanding";
 import UserService from "../../services/user.service";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-export default function DashboardPage() {
+export default function ProfilePage() {
+  const { id } = useParams();
   const user = JSON.parse(localStorage.getItem("user"));
   const views = ["Activities", "Following", "Followers"];
   const [userData, setUserData] = useState({});
@@ -11,18 +13,33 @@ export default function DashboardPage() {
   const [isLoading, setisLoading] = useState(true);
   const [view, setView] = useState(views[0]);
 
+  console.log("user_id", user.pk);
+  console.log("id", id);
+
   useEffect(() => {
-    UserService.getUserProfile(user.pk).then((response) => {
-      if (response[0].status === 200 && response[1].status === 200) {
-        setisLoading(false);
-        setUserData(response[0].data);
-        setUserPicData(response[1].data);
-      } else {
-        console.error("Error: ", response[0]);
-        console.error("Error: ", response[1]);
-      }
-    });
-  }, [user.pk]);
+    UserService.getUserProfile(id)
+      .then((response) => {
+        console.log(response);
+        console.log(response.status);
+        if (response.status === 404) {
+          setUserData({ error: "User not found" });
+        } else if (response[0].status === 200 && response[1].status === 200) {
+          setisLoading(false);
+          setUserData(response[0].data);
+          setUserPicData(response[1].data);
+        } else {
+          console.error("Error: ", response[0]);
+          console.error("Error: ", response[1]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error: ", error);
+      });
+  }, [id]);
+
+  if (userData.error) {
+    return <Navigate to="/404/user-not-found" replace />;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -31,13 +48,12 @@ export default function DashboardPage() {
     return (
       <>
         <NavBarLanding />
-
-        <section id="dash" className="row">
+        <section id="profile" className="row">
           <div className="col-12 col-lg-6">
             <section className="py-6">
               <div className="container">
                 <div className="position-relative p-8 border rounded-2">
-                  <h3> Dashboard </h3>
+                  <h3> User Profile </h3>
                   <div className="mb-8 text-center">
                     <img
                       className="img-fluid rounded-2 mb-6"
@@ -143,29 +159,7 @@ export default function DashboardPage() {
                     </div>
                     <p className="mb-0">0</p>
                   </div>
-                  <Link
-                    className="text-decoration-none"
-                    to={`/profile/${userData.id}`}
-                  >
-                    <button className="btn me-4 mb-3 w-100 d-flex align-items-center justify-content-center btn-outline-primary">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={24}
-                        height={24}
-                        viewBox="0 0 24 24"
-                        className="me-2"
-                      >
-                        <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 9c2.7 0 5.8 1.29 6 2v1H6v-.99c.2-.72 3.3-2.01 6-2.01m0-11C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
-                      </svg>
-                      <span> Profile </span>
-                    </button>
-                  </Link>
-                  <button
-                    onClick={() => setView(views[0])}
-                    className="btn me-4 w-100 d-flex align-items-center justify-content-center btn-outline-primary"
-                  >
-                    <span> Feed </span>
-                  </button>
+                  {user.pk === +id ? "" : <FollowButton />}
                 </div>
               </div>
             </section>
@@ -179,73 +173,24 @@ export default function DashboardPage() {
   }
 }
 
-const FollowerCard = (followers) => {
-  console.log("Follower card", followers["followers"]);
-  const listItems = [];
-  for (let i = 0; i < followers["followers"].length; i++) {
-    listItems.push(
-      <div className="p-6 mb-4 border rounded-2">
-        <div className="row align-items-center">
-          <div className="col-12 col-md-auto mb-4 mb-md-0">
-            <div className="d-inline-flex align-items-center">
-              <span
-                className="d-inline-flex flex-shrink-0 align-items-center justify-content-center me-4 rounded-2 bg-primary-light text-primary"
-                style={{ width: 72, height: 72 }}
-              >
-                <img
-                  src={`http://localhost:8000/media/${followers["followers"][i].profile_picture}`}
-                  alt={`${followers["followers"][i].username}`}
-                  style={{ width: 60, height: 60 }}
-                />
-              </span>
-              <div>
-                <p className="mb-1 fw-bold text-dark">
-                  <span>{followers["followers"][i].username}</span>
-                  <span
-                    className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                    style={{ width: 4, height: 4 }}
-                  />
-                </p>
-                <p className="medium mb-0">
-                  <span>{followers["followers"][i].email}</span>
-                  <span className="ms-1">&amp;centerdot; 1h ago</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col col-md-auto ms-auto">
-            <button className="btn d-inline-flex align-items-center justify-content-center p-0 shadow rounded-2">
-              {" "}
-              Unfollow{" "}
-            </button>
-            <a
-              className="btn d-inline-flex align-items-center justify-content-center p-0 btn-outline-light shadow rounded-2"
-              href="#dash"
-              style={{ width: 40, height: 40 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                aria-hidden="true"
-                className=""
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return <>{listItems}</>;
+const FollowButton = () => {
+  return (
+    <button
+      className="btn me-4 w-100 d-flex align-items-center justify-content-center btn-outline-primary"
+      href="#dash"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        className="me-2"
+      >
+        <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 9c2.7 0 5.8 1.29 6 2v1H6v-.99c.2-.72 3.3-2.01 6-2.01m0-11C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+      </svg>
+      <span> Follow / Unfollow </span>
+    </button>
+  );
 };
 
 const FollowerStream = (followers) => {
@@ -352,6 +297,75 @@ const FollowingStream = (following) => {
   );
 };
 
+const FollowerCard = (followers) => {
+  console.log("Follower card", followers["followers"]);
+  const listItems = [];
+  for (let i = 0; i < followers["followers"].length; i++) {
+    listItems.push(
+      <div className="p-6 mb-4 border rounded-2">
+        <div className="row align-items-center">
+          <div className="col-12 col-md-auto mb-4 mb-md-0">
+            <div className="d-inline-flex align-items-center">
+              <span
+                className="d-inline-flex flex-shrink-0 align-items-center justify-content-center me-4 rounded-2 bg-primary-light text-primary"
+                style={{ width: 72, height: 72 }}
+              >
+                <img
+                  src={`http://localhost:8000/media/${followers["followers"][i].profile_picture}`}
+                  alt={`${followers["followers"][i].username}`}
+                  style={{ width: 60, height: 60 }}
+                />
+              </span>
+              <div>
+                <p className="mb-1 fw-bold text-dark">
+                  <span>{followers["followers"][i].username}</span>
+                  <span
+                    className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
+                    style={{ width: 4, height: 4 }}
+                  />
+                </p>
+                <p className="medium mb-0">
+                  <span>{followers["followers"][i].email}</span>
+                  <span className="ms-1">&amp;centerdot; 1h ago</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="col col-md-auto ms-auto">
+            <button className="btn d-inline-flex align-items-center justify-content-center p-0 shadow rounded-2">
+              {" "}
+              Unfollow{" "}
+            </button>
+            <a
+              className="btn d-inline-flex align-items-center justify-content-center p-0 btn-outline-light shadow rounded-2"
+              href="#dash"
+              style={{ width: 40, height: 40 }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                aria-hidden="true"
+                className=""
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{listItems}</>;
+};
+
 const ActivityStream = () => {
   return (
     <>
@@ -359,7 +373,7 @@ const ActivityStream = () => {
         <section className="py-6">
           <div className="container">
             <div className="position-relative p-8 border rounded-2">
-              <h3> News Feed </h3>
+              <h3> Activities </h3>
 
               <div className="p-6 mb-4 border rounded-2">
                 <div className="row align-items-center">

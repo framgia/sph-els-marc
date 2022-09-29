@@ -8,7 +8,7 @@ from rest_framework.routers import SimpleRouter
 from elearning.views import CategoryViewSet, WordViewSet
 from eprofile.views import (
     UserFollowingViewSet,
-    UserProfilePictureUploadView,
+    UserProfilePictureViewSet,
     UserProfileViewSet,
 )
 
@@ -32,6 +32,7 @@ router = SimpleRouter()
 router.register("category", CategoryViewSet, basename="category")
 router.register("word", WordViewSet, basename="word")
 router.register("profile", UserProfileViewSet, basename="profile")
+router.register("profile_picture", UserProfilePictureViewSet, basename="profile_picture")
 router.register("following", UserFollowingViewSet, basename="following")
 
 urlpatterns = [
@@ -41,7 +42,6 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("profile/", include("eprofile.urls", namespace="profile")),
-    path("profile/<int:id>/picture/", UserProfilePictureUploadView.as_view()),
     path("csrf/", CSRFView.as_view()),
 ]
 
