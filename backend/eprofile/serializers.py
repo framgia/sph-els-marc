@@ -18,13 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ("username", "is_superuser", "email")
 
 
-class UserProfilePictureSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfilePicture
-        fields = ("profile_picture", "user_profile")
-        read_only_fields = ("user_profile", "profile_picture")
-
-
 class FollowingSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="following.user.username", read_only=True)
     first_name = serializers.CharField(source="following.user.first_name", read_only=True)
@@ -82,12 +75,20 @@ class FollowerSerializer(serializers.ModelSerializer):
             "email",
             "profile_picture",
         )
+        read_only_fields = ("username", "is_superuser", "email")
+
+
+class UserProfilePictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfilePicture
+        fields = ("profile_picture", "user_profile")
+        read_only_fields = ("user_profile", "profile_picture")
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=False)
     profile_picture = serializers.CharField(
-        source="user_profile.user_profile_picture.profile_picture", read_only=True
+        source="user_profile_picture.profile_picture", read_only=True
     )
     followers = serializers.SerializerMethodField()
     following = serializers.SerializerMethodField()

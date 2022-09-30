@@ -1,35 +1,35 @@
-import NavBarLanding from "../../components/elements/NavBarLanding";
-import NavBarSideLanding from "../../components/elements/NavBarSideLanding";
-import Footer from "../../components/Footer";
-import { Link, Navigate } from "react-router-dom";
-import { useFormik } from "formik";
-import { login } from "../../actions/auth";
-import { useSelector, useDispatch } from "react-redux";
-import * as Yup from "yup";
+import NavBarLanding from '../../components/elements/NavBarLanding'
+import NavBarSideLanding from '../../components/elements/NavBarSideLanding'
+import Footer from '../../components/Footer'
+import { Link, Navigate } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { login } from '../../actions/auth'
+import { useSelector, useDispatch } from 'react-redux'
+import * as Yup from 'yup'
 
 const LoginPage = () => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
+  const { isLoggedIn } = useSelector((state) => state.auth)
+  const { message } = useSelector((state) => state.message)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const formik = useFormik({
     initialValues: {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     },
     validationSchema: Yup.object().shape({
-      username: Yup.string().required("Username is required"),
-      password: Yup.string().required("Password is required"),
+      username: Yup.string().required('Username is required'),
+      password: Yup.string().required('Password is required'),
     }),
     onSubmit: (values) => {
-      const { username, password } = values;
-      dispatch(login(username, password));
+      const { username, password } = values
+      dispatch(login(username, password))
     },
-  });
+  })
 
   if (isLoggedIn) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/dashboard" replace />
   }
 
   return (
@@ -41,8 +41,8 @@ const LoginPage = () => {
         className="py-24 py-lg-36 bg-white"
         style={{
           backgroundImage: 'url("/images/forms/form-1-shadow.png")',
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
           zIndex: -1,
         }}
       >
@@ -109,7 +109,7 @@ const LoginPage = () => {
             </button>
             <span className="text-center d-block" style={{ fontSize: 12 }}>
               <span>Don’t have an account? </span>
-              <Link to={"/register"} className="text-decoration-none">
+              <Link to={'/register'} className="text-decoration-none">
                 Sign Up
               </Link>
             </span>
@@ -118,8 +118,7 @@ const LoginPage = () => {
       </section>
       <Footer />
     </>
-  );
+  )
+}
 
-};
-
-export default LoginPage;
+export default LoginPage

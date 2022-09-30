@@ -1,33 +1,23 @@
-import NavBarLanding from "../../components/elements/NavBarLanding";
-import UserService from "../../services/user.service";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import ActivityStream from '../../components/elements/ActivityStream'
+import FollowerStream from '../../components/elements/FollowerStream'
+import FollowingStream from '../../components/elements/FollowingStream'
+import NavBarLanding from '../../components/elements/NavBarLanding'
+import useProfileDetails from '../../hooks/useProfileDetails'
 
 export default function DashboardPage() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const views = ["Activities", "Following", "Followers"];
-  const [userData, setUserData] = useState({});
-  const [userPicData, setUserPicData] = useState({});
-  const [isLoading, setisLoading] = useState(true);
-  const [view, setView] = useState(views[0]);
+  const user = JSON.parse(localStorage.getItem('user'))
+  const views = ['Activities', 'Following', 'Followers']
+  const [view, setView] = useState(views[0])
 
-  useEffect(() => {
-    UserService.getUserProfile(user.pk).then((response) => {
-      if (response[0].status === 200 && response[1].status === 200) {
-        setisLoading(false);
-        setUserData(response[0].data);
-        setUserPicData(response[1].data);
-      } else {
-        console.error("Error: ", response[0]);
-        console.error("Error: ", response[1]);
-      }
-    });
-  }, [user.pk]);
+  const { isLoading, userData, userPicData } = useProfileDetails(user.pk)
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   } else {
-    const { followers, following } = userData;
+    const { followers, following } = userData
+
     return (
       <>
         <NavBarLanding />
@@ -46,15 +36,15 @@ export default function DashboardPage() {
                       alt=""
                     />
                     <h6 className="fw-bold">
-                      {" "}
-                      {userData.user.first_name === ""
+                      {' '}
+                      {userData.user.first_name === ''
                         ? userData.user.username
                         : userData.user.first_name}
                     </h6>
                     <p className="mb-4">
-                      {userData.user.is_superuser ? "Admin" : "Student"}
+                      {userData.user.is_superuser ? 'Admin' : 'Student'}
                     </p>
-                    <p>{userData.user.bio ? userData.user.bio : "No bio. "}</p>
+                    <p>{userData.user.bio ? userData.user.bio : 'No bio. '}</p>
                     <div className="row">
                       <button
                         onClick={() => setView(views[1])}
@@ -71,7 +61,7 @@ export default function DashboardPage() {
                         href="#dash"
                       >
                         {userData.follower_count} Follower
-                        {userData.follower_count === 1 ? "" : "s"}
+                        {userData.follower_count === 1 ? '' : 's'}
                       </button>
                     </div>
                   </div>
@@ -175,302 +165,6 @@ export default function DashboardPage() {
           {view === views[2] && <FollowerStream followers={followers} />}
         </section>
       </>
-    );
+    )
   }
 }
-
-const FollowerCard = (followers) => {
-  console.log("Follower card", followers["followers"]);
-  const listItems = [];
-  for (let i = 0; i < followers["followers"].length; i++) {
-    listItems.push(
-      <div className="p-6 mb-4 border rounded-2">
-        <div className="row align-items-center">
-          <div className="col-12 col-md-auto mb-4 mb-md-0">
-            <div className="d-inline-flex align-items-center">
-              <span
-                className="d-inline-flex flex-shrink-0 align-items-center justify-content-center me-4 rounded-2 bg-primary-light text-primary"
-                style={{ width: 72, height: 72 }}
-              >
-                <img
-                  src={`http://localhost:8000/media/${followers["followers"][i].profile_picture}`}
-                  alt={`${followers["followers"][i].username}`}
-                  style={{ width: 60, height: 60 }}
-                />
-              </span>
-              <div>
-                <p className="mb-1 fw-bold text-dark">
-                  <span>{followers["followers"][i].username}</span>
-                  <span
-                    className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                    style={{ width: 4, height: 4 }}
-                  />
-                </p>
-                <p className="medium mb-0">
-                  <span>{followers["followers"][i].email}</span>
-                  <span className="ms-1">&amp;centerdot; 1h ago</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col col-md-auto ms-auto">
-            <button className="btn d-inline-flex align-items-center justify-content-center p-0 shadow rounded-2">
-              {" "}
-              Unfollow{" "}
-            </button>
-            <a
-              className="btn d-inline-flex align-items-center justify-content-center p-0 btn-outline-light shadow rounded-2"
-              href="#dash"
-              style={{ width: 40, height: 40 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                aria-hidden="true"
-                className=""
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return <>{listItems}</>;
-};
-
-const FollowerStream = (followers) => {
-  return (
-    <>
-      <div className="col-12 col-lg-6">
-        <section className="py-6">
-          <div className="container">
-            <div className="position-relative p-8 border rounded-2">
-              <h3> Followers </h3>
-              {/** Here */}
-              <FollowerCard followers={followers.followers} />
-            </div>
-          </div>
-        </section>
-      </div>
-    </>
-  );
-};
-
-const FollowingCard = (following) => {
-  console.log("Follower card", following["following"]);
-  const listItems = [];
-  for (let i = 0; i < following["following"].length; i++) {
-    listItems.push(
-      <div className="p-6 mb-4 border rounded-2">
-        <div className="row align-items-center">
-          <div className="col-12 col-md-auto mb-4 mb-md-0">
-            <div className="d-inline-flex align-items-center">
-              <span
-                className="d-inline-flex flex-shrink-0 align-items-center justify-content-center me-4 rounded-2 bg-primary-light text-primary"
-                style={{ width: 72, height: 72 }}
-              >
-                <img
-                  src={`http://localhost:8000/media/${following["following"][i].profile_picture}`}
-                  alt={`${following["following"][i].username}`}
-                  style={{ width: 60, height: 60 }}
-                />
-              </span>
-              <div>
-                <p className="mb-1 fw-bold text-dark">
-                  <span>{following["following"][i].username}</span>
-                  <span
-                    className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                    style={{ width: 4, height: 4 }}
-                  />
-                </p>
-                <p className="medium mb-0">
-                  <span>{following["following"][i].email}</span>
-                  <span className="ms-1">&amp;centerdot; 1h ago</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col col-md-auto ms-auto">
-            <button className="btn d-inline-flex align-items-center justify-content-center p-0 shadow rounded-2">
-              {" "}
-              Unfollow{" "}
-            </button>
-            <a
-              className="btn d-inline-flex align-items-center justify-content-center p-0 btn-outline-light shadow rounded-2"
-              href="#dash"
-              style={{ width: 40, height: 40 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                aria-hidden="true"
-                className=""
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return <>{listItems}</>;
-};
-
-const FollowingStream = (following) => {
-  return (
-    <>
-      <div className="col-12 col-lg-6">
-        <section className="py-6">
-          <div className="container">
-            <div className="position-relative p-8 border rounded-2">
-              <h3> Following </h3>
-              <FollowingCard following={following.following} />
-            </div>
-          </div>
-        </section>
-      </div>
-    </>
-  );
-};
-
-const ActivityStream = () => {
-  return (
-    <>
-      <div className="col-12 col-lg-6">
-        <section className="py-6">
-          <div className="container">
-            <div className="position-relative p-8 border rounded-2">
-              <h3> News Feed </h3>
-
-              <div className="p-6 mb-4 border rounded-2">
-                <div className="row align-items-center">
-                  <div className="col-12 col-md-auto mb-4 mb-md-0">
-                    <div className="d-inline-flex align-items-center">
-                      <span
-                        className="d-inline-flex flex-shrink-0 align-items-center justify-content-center me-4 rounded-2 bg-primary-light text-primary"
-                        style={{ width: 48, height: 48 }}
-                      >
-                        Aa
-                      </span>
-                      <div>
-                        <p className="mb-1 fw-bold text-dark">
-                          <span>Ashton Cox</span>
-                          <span
-                            className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                            style={{ width: 4, height: 4 }}
-                          />
-                        </p>
-                        <p className="medium mb-0">
-                          <span>
-                            Sed ut perspiciatis unde omnis iste natus error sit
-                            voluptatem accusantium ...
-                          </span>
-                          <span className="ms-1">&amp;centerdot; 1h ago</span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col col-md-auto ms-auto">
-                    <a
-                      className="btn d-inline-flex align-items-center justify-content-center p-0 btn-outline-light shadow rounded-2"
-                      href="#dash"
-                      style={{ width: 40, height: 40 }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className=""
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6 mb-4 border rounded-2">
-                <div className="row align-items-center">
-                  <div className="col-12 col-md-auto mb-4 mb-md-0">
-                    <div className="d-inline-flex align-items-center">
-                      <span
-                        className="d-inline-flex flex-shrink-0 align-items-center justify-content-center me-4 rounded-2 bg-primary-light text-primary"
-                        style={{ width: 48, height: 48 }}
-                      >
-                        Aa
-                      </span>
-                      <div>
-                        <p className="mb-1 fw-bold text-dark">
-                          <span>Ashton Cox</span>
-                          <span
-                            className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                            style={{ width: 4, height: 4 }}
-                          />
-                        </p>
-                        <p className="medium mb-0">
-                          <span>
-                            Sed ut perspiciatis unde omnis iste natus error sit
-                            voluptatem accusantium ...
-                          </span>
-                          <span className="ms-1">&amp;centerdot; 1h ago</span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col col-md-auto ms-auto">
-                    <a
-                      className="btn d-inline-flex align-items-center justify-content-center p-0 btn-outline-light shadow rounded-2"
-                      href="#dash"
-                      style={{ width: 40, height: 40 }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className=""
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </>
-  );
-};

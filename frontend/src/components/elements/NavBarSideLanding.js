@@ -1,19 +1,19 @@
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function NavBarSideDashboard({ open, setOpen }) {
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn } = useSelector((state) => state.auth)
   return (
     <div
       className={
         `navbar-menu position-fixed top-0 start-0 bottom-0 w-75 mw-sm ` +
-        (open ? "" : "d-none")
+        (open ? '' : 'd-none')
       }
       style={{ zIndex: 9999 }}
     >
       <div
         className="navbar-close position-fixed top-0 start-0 end-0 bottom-0 bg-dark"
-        style={{ opacity: "75%" }}
+        style={{ opacity: '75%' }}
       />
       <nav className="position-relative h-100 w-100 d-flex flex-column py-10 px-6 bg-white overflow-auto">
         <div className="d-flex align-items-center mb-12">
@@ -73,7 +73,7 @@ function NavBarSideDashboard({ open, setOpen }) {
         </div>
       </nav>
     </div>
-  );
+  )
 }
 
-export default NavBarSideDashboard;
+export default NavBarSideDashboard

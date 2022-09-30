@@ -3,22 +3,22 @@ import {
   submitRegister,
   submitLogout,
   getLoggedInInfo,
-} from "./client/base";
+} from './client/base'
 
 const register = async (username, email, password1, password2) => {
-  return submitRegister(username, email, password1, password2);
-};
+  return submitRegister(username, email, password1, password2)
+}
 
 const login = (username, password) => {
- return submitLogin(username, password);
-};
+  return submitLogin(username, password)
+}
 
 const logout = async () => {
-  return submitLogout();
-};
+  return submitLogout()
+}
 
 const getLoggedInUser = async () => {
-  return getLoggedInInfo();
-};
+  return getLoggedInInfo()
+}
 // eslint-disable-next-line
-export default { register, login, logout, getLoggedInUser };
+export default { register, login, logout, getLoggedInUser }
