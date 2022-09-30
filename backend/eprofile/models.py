@@ -55,6 +55,11 @@ class UserFollowing(models.Model):
     def __str__(self):
         return self.follower.user.username + " follows " + self.following.user.username
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["follower", "following"], name="unique_followers")
+        ]
+
     def save(self, *args, **kwargs):
         self.follower.following_count += 1
         self.follower.save()
