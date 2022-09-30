@@ -29,7 +29,6 @@ class UserProfile(models.Model):
 
 
 class UserProfilePicture(models.Model):
-
     user_profile = models.OneToOneField(
         UserProfile, on_delete=models.CASCADE, related_name="user_profile_picture"
     )
@@ -54,12 +53,7 @@ class UserFollowing(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.follower.username + " follows " + self.following.username
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["follower", "following"], name="unique_followers")
-        ]
+        return self.follower.user.username + " follows " + self.following.user.username
 
     def save(self, *args, **kwargs):
         self.follower.following_count += 1

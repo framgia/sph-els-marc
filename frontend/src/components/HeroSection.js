@@ -1,4 +1,4 @@
-import NavBarLanding from "./elements/NavBarLanding";
+import NavBarLanding from './elements/NavBarLanding'
 
 function HeroSection() {
   return (
@@ -75,7 +75,7 @@ function HeroSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default HeroSection;
+export default HeroSection

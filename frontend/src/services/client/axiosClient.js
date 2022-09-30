@@ -1,37 +1,36 @@
-import axios from "axios";
+import axios from 'axios'
 
 const config = {
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
-  xsrfCookieName: "XSRF-TOKEN",
-  xsrfHeaderName: "X-CSRFToken",
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-CSRFToken',
   withCredentials: true,
-};
+}
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: 'http://localhost:8000/',
   config,
-});
+})
 
-axiosClient.defaults.withCredentials = true;
-axiosClient.defaults.xsrfHeaderName = "X-CSRFToken";
-axiosClient.defaults.xsrfCookieName = "XSRF-TOKEN";
+axiosClient.defaults.withCredentials = true
+axiosClient.defaults.xsrfHeaderName = 'X-CSRFToken'
+axiosClient.defaults.xsrfCookieName = 'XSRF-TOKEN'
 
 //using interceptors, add the token to the header of every request
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     if (token) {
-      config.headers["Authorization"] = `Token ${token}`;
+      config.headers['Authorization'] = `Token ${token}`
     }
-    return config;
+    return config
   },
   (error) => {
-    Promise.reject(error);
-  }
-);
+    Promise.reject(error)
+  },
+)
 
-
-export { axiosClient };
+export { axiosClient }

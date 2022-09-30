@@ -4,7 +4,6 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from .models import UserFollowing, UserProfile, UserProfilePicture
 from .serializers import (
@@ -12,6 +11,14 @@ from .serializers import (
     UserProfilePictureSerializer,
     UserProfileSerializer,
 )
+
+
+class UserProfilePictureViewSet(viewsets.ModelViewSet):
+    parser_classes = [MultiPartParser, FormParser]
+    queryset = UserProfilePicture.objects.all().order_by("-created_at")
+    serializer_class = UserProfilePictureSerializer
+    http_method_names = ["get", "put"]
+    my_tags = ["User Profile Pictures"]
 
 
 class UserProfilePictureViewSet(viewsets.ModelViewSet):
@@ -32,7 +39,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 class UserFollowingViewSet(viewsets.ModelViewSet):
     queryset = UserFollowing.objects.all().order_by("-created_at")
     serializer_class = UserFollowingSerializer
-    http_method_names = ["post", "get"]
+    http_method_names = ["post", "get", "delete"]
     my_tags = ["User Following"]
 
     @swagger_auto_schema(

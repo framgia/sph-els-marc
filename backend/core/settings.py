@@ -30,10 +30,10 @@ LOCAL_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    "rest_framework",
     "django_extensions",
     "drf_yasg",
     "corsheaders",
-    "rest_framework",
     "rest_framework.authtoken",
     "django.contrib.sites",
     "dj_rest_auth",
@@ -61,8 +61,8 @@ SITE_ID = 1  # django.contrib.sites settings
 
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import NavBarSideLanding from "./NavBarSideLanding";
-import { useSelector } from "react-redux";
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import NavBarSideLanding from './NavBarSideLanding'
+import { useSelector } from 'react-redux'
 
 function NavBarLanding() {
-  const [open, setOpen] = useState(false);
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const [open, setOpen] = useState(false)
+  const { isLoggedIn } = useSelector((state) => state.auth)
 
   return (
     <>
@@ -41,8 +41,8 @@ function NavBarLanding() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Community (Soon)
+                <Link to="/category/" className="nav-link">
+                  Category
                 </Link>
               </li>
               <li className="nav-item">
@@ -77,7 +77,7 @@ function NavBarLanding() {
       </nav>
       <NavBarSideLanding open={open} setOpen={setOpen} />
     </>
-  );
+  )
 }
 
-export default NavBarLanding;
+export default NavBarLanding
