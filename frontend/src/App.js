@@ -32,7 +32,6 @@ function App() {
     )
   }
 
-  //const [user, setUser] = useState(null);
   const { isLoggedIn } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
 

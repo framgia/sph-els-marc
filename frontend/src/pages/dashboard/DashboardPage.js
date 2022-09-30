@@ -17,7 +17,6 @@ export default function DashboardPage() {
     return <div>Loading...</div>
   } else {
     const { followers, following } = userData
-
     return (
       <>
         <NavBarLanding />
