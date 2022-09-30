@@ -5,6 +5,8 @@ from django.urls import include, path
 
 from dj_rest_auth.views import PasswordResetConfirmView
 
+from elearning.views import LessonAnsweringPostView
+
 urlpatterns = [
     path("admin", admin.site.urls),
     path("api/v1/", include("api.urls")),
@@ -18,4 +20,5 @@ urlpatterns = [
         PasswordResetConfirmView.as_view(),
         name="password_reset_confirm",
     ),
+    path("api/v1/lesson_answering/<int:taker_id>/", LessonAnsweringPostView),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
