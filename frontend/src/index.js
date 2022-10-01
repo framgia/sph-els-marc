@@ -1,12 +1,11 @@
+import App from './App'
+import reportWebVitals from './reportWebVitals'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import '@sweetalert2/theme-material-ui/material-ui.css'
+import store from './store'
 import { CookiesProvider } from 'react-cookie'
 import { Provider } from 'react-redux'
-import App from './App'
-import reportWebVitals from './reportWebVitals'
-import store from './store'
-
 const container = document.getElementById('root')
 const root = createRoot(container)
 

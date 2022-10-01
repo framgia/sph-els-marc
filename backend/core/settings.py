@@ -34,6 +34,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "drf_yasg",
     "corsheaders",
+    "django_filters",
     "rest_framework.authtoken",
     "django.contrib.sites",
     "dj_rest_auth",
@@ -231,6 +232,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "PAGE_SIZE": 10,
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
 }

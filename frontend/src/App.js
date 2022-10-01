@@ -10,18 +10,10 @@ import { logout } from './actions/auth'
 import { useDispatch } from 'react-redux'
 import React from 'react'
 import CategoryListPage from './pages/category/CategoryListPage'
+import CategoryResultsPage from './pages/category-results/CategoryResultsPage'
+import CategoryPage from './pages/category-page/CategoryPage'
 
 function App() {
-  /** Organize Protected Routes for the mean time */
-  function Child() {
-    let { category_id } = useParams()
-    return (
-      <div>
-        <h3>ID: {category_id}</h3>
-      </div>
-    )
-  }
-
   function ChildTwo() {
     let { id, word_id } = useParams()
     return (
@@ -58,7 +50,11 @@ function App() {
         <Route path="/dashboard/" element={<DashboardPage />} />
         <Route path="/profile/:id/" element={<ProfilePage />} />
         <Route path="/category/" element={<CategoryListPage />} />
-        <Route path="/category/:category_id/" element={<Child />} />
+        <Route path="/category/:category_id/" element={<CategoryPage />} />
+        <Route
+          path="/category/results/:category_id/"
+          element={<CategoryResultsPage />}
+        />
         <Route path="/category/:id/word/:word_id/" element={<ChildTwo />} />
         <Route
           path="/logout/"
