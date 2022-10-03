@@ -1,8 +1,4 @@
-from typing import List
-
-from rest_framework import serializers, status
-from rest_framework.response import Response
-from rest_typed.serializers import TSerializer
+from rest_framework import serializers
 
 from .models import Answer, Category, Choice, QuizRecord, Word, WordRecord
 
@@ -30,7 +26,6 @@ class CategoryNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ("category_name",)
-        # read_only_fields = ("name",)
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -97,7 +92,6 @@ class WordSerializer(serializers.ModelSerializer):
         choices = self.context["request"].data.get("choices", [])
         answer = self.context["request"].data.get("answer", "")
         instance.word_text = validated_data["word_text"]
-        # instance.save()
         Choice.objects.filter(word=instance).delete()
         for choice in choices:
             Choice.objects.get_or_create(choice_text=choice["choice_text"], word=instance)
@@ -106,8 +100,6 @@ class WordSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    # words = WordSerializer(many=True, read_only=False)
-
     class Meta:
         model = Category
         fields = (
@@ -117,6 +109,5 @@ class CategorySerializer(serializers.ModelSerializer):
             "num_items",
             "created_at",
             "updated_at",
-            # "words",
         )
         read_only_fields = ("id", "num_items", "created_at", "updated_at")

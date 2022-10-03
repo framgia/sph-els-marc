@@ -5,7 +5,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
 
-from elearning.views import CategoryViewSet, WordViewSet
+from elearning.views import CategoryViewSet, LessonResultsViewSet, WordViewSet
 from eprofile.views import (
     UserFollowingViewSet,
     UserProfilePictureViewSet,
@@ -34,6 +34,7 @@ router.register("word", WordViewSet, basename="word")
 router.register("profile", UserProfileViewSet, basename="profile")
 router.register("profile_picture", UserProfilePictureViewSet, basename="profile_picture")
 router.register("following", UserFollowingViewSet, basename="following")
+router.register("lesson_results", LessonResultsViewSet, basename="lesson_results")
 
 urlpatterns = [
     path(
