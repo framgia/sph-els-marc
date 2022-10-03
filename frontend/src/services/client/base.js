@@ -11,9 +11,15 @@ const submitLogin = async (user, pass) => {
     if (response.status === 200 && inforesp.status === 200) {
       const { data } = inforesp
       data['accessToken'] = localStorage.getItem('token')
-      localStorage.setItem('user', JSON.stringify(data))
+      const profileresp = await getProfileInfo(inforesp.data.pk)
+      if (profileresp.status === 200) {
+        const profiledata = profileresp.data
+        //localStorage.setItem('profile', JSON.stringify(profiledata))
+        data['is_admin'] = profiledata.user.is_superuser
+        localStorage.setItem('user', JSON.stringify(data))
+        return data
+      }
     }
-    return response
   } catch (error) {
     console.error(`Error encountered while logging in: ${error}`)
   }
@@ -31,6 +37,11 @@ const submitRegister = async (user, email, pass1, pass2) => {
 
 const getLoggedInInfo = async () => {
   const response = await axiosClient.get('dj-rest-auth/user/')
+  return response
+}
+
+const getProfileInfo = async (id) => {
+  const response = await axiosClient.get(`api/v1/profile/${id}/`)
   return response
 }
 

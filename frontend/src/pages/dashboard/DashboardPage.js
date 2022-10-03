@@ -37,7 +37,6 @@ export default function DashboardPage() {
                       alt=""
                     />
                     <h6 className="fw-bold">
-                      {' '}
                       {userData.user.first_name === ''
                         ? userData.user.username
                         : userData.user.first_name}

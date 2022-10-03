@@ -110,7 +110,6 @@ def LessonAnsweringPostView(taker_id: int, lesson: LessonAnsweringSchema):
             is_correct=word["is_correct"],
             correct_answer_id=answer_ob.word_id,
         )
-    # For React, we need to return a JSON object
 
     response_dict = {
         "id": quiz_record.id,
