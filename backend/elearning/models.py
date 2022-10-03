@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 
 from eprofile.models import UserProfile
 
@@ -38,14 +36,14 @@ class Word(models.Model):
         verbose_name_plural = "Words"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         self.category.num_items += 1
         self.category.save()
-        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
         self.category.num_items -= 1
         self.category.save()
-        super().delete(*args, **kwargs)
 
 
 class Answer(models.Model):
@@ -98,9 +96,9 @@ class QuizRecord(models.Model):
         return f"{self.user_profile_taker.user.username} has taken {self.category_taken.category_name} with a score of {self.score} out of {self.total}"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         self.user_profile_taker.lessons_learned += 1
         self.user_profile_taker.save()
-        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.user_profile_taker.lessons_learned -= 1
@@ -124,13 +122,13 @@ class WordRecord(models.Model):
         return f"{self.user_profile_taker.user.username} has answered {self.word_taken.word_text} : {self.is_correct}"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         if self.is_correct:
             self.user_profile_taker.words_learned += 1
             self.user_profile_taker.save()
-        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
         if self.is_correct:
             self.user_profile_taker.words_learned -= 1
             self.user_profile_taker.save()
-        super().delete(*args, **kwargs)

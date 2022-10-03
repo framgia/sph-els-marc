@@ -1,3 +1,5 @@
+from typing import List
+
 from rest_framework import serializers
 
 from .models import Answer, Category, Choice, QuizRecord, Word, WordRecord
@@ -108,16 +110,6 @@ class WordSerializer(serializers.ModelSerializer):
         setattr(word, "answer", ans_obj)
 
         return word
-
-    def update(self, instance, validated_data):
-        choices = self.context["request"].data.get("choices", [])
-        answer = self.context["request"].data.get("answer", "")
-        instance.word_text = validated_data["word_text"]
-        Choice.objects.filter(word=instance).delete()
-        for choice in choices:
-            Choice.objects.get_or_create(choice_text=choice["choice_text"], word=instance)
-        Answer.objects.filter(word=instance).update(answer_text=answer["answer_text"])
-        return instance
 
 
 class CategorySerializer(serializers.ModelSerializer):
