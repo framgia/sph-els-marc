@@ -9,12 +9,12 @@ import UserService from '../../services/user.service'
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-right',
-  iconColor: 'white',
+  iconColor: 'black',
   customClass: {
     popup: 'colored-toast',
   },
   showConfirmButton: false,
-  timer: 300,
+  timer: 900,
   timerProgressBar: true,
 })
 
@@ -36,6 +36,35 @@ const FollowButton = (props) => {
           navigate(0)
         })
       }
+      if (response.status === 400) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Already followed!',
+          timer: 2000,
+        })
+      }
+
+      if (response.status === 401) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unauthorized!',
+          timer: 2000,
+        })
+      }
+
+      if (response.status === 500) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Server Error! Please refresh the site',
+          customClass: {
+            popup: 'colored-toast',
+          },
+          timer: 2000,
+        }).then(() => {
+          navigate(0)
+        })
+      }
+
       return response
     } else {
       const response = await UserService.deleteUserFollowing(
@@ -51,6 +80,16 @@ const FollowButton = (props) => {
           navigate(0)
         })
       }
+
+      if (response.status === 500) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Server Error! Please refresh the site',
+        }).then(() => {
+          navigate(0)
+        })
+      }
+
       return response
     }
   }, [props])
