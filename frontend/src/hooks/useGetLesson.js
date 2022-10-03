@@ -18,7 +18,7 @@ export default function useGetLesson(category_id) {
           }
         })
         .catch((error) => {
-          console.log(error)
+          console.error(error)
           setError(error)
           setIsLoading(false)
         })

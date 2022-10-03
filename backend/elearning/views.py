@@ -12,7 +12,12 @@ from rest_typed.views import typed_api_view
 from eprofile.models import UserProfile
 
 from .models import Answer, Category, Choice, QuizRecord, Word, WordRecord
-from .serializers import CategorySerializer, QuizRecordSerializer, WordSerializer
+from .serializers import (
+    CategorySerializer,
+    QuizRecordSerializer,
+    WordRecordSerializer,
+    WordSerializer,
+)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -126,8 +131,7 @@ class LessonResultsViewSet(viewsets.ModelViewSet):
     filterset_fields = ["user_profile_taker_id", "category_taken_id"]
     http_method_names = ["get"]
     my_tags = ["Lesson Results"]
-    # TODO: remove when confirmed no longer needed
-    # TODO: To be deleted once confirmed will not be used
+    # TODO: will remove when confirmed that this is not needed
     # lookup_field = "user_profile_taker_id"
 
     # def retrieve(self, request, *args, **kwargs):
@@ -154,3 +158,12 @@ def LessonResultExistsView(category_taken_id: int, taker_id: int):
 
     results_dict = {"exists": True}
     return Response(results_dict, status.HTTP_200_OK)
+
+
+class WordRecordViewSet(viewsets.ModelViewSet):
+    queryset = WordRecord.objects.all().order_by("-created_at")
+    serializer_class = WordRecordSerializer
+    http_method_names = ["get", "post", "put", "delete"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["user_profile_taker_id", "quiz_record_id", "is_correct"]
+    my_tags = ["Words Learned"]

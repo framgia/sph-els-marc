@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
-import categoryService from '../services/category.service'
+import CategoryService from '../services/category.service'
 
-export default function useGetLessons() {
-  const [lessons, setLessons] = useState([])
+export default function useGetWordsLearned(user_profile_taker_id) {
+  const [words, setWords] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState({})
 
   useEffect(() => {
-    categoryService
-      .getCategories()
+    CategoryService.getWordsLearned(user_profile_taker_id)
       .then((response) => {
         if (response.status === 200) {
-          setLessons(response.data)
+          setWords(response.data.results)
           setIsLoading(false)
           setError(false)
         }
@@ -21,7 +20,7 @@ export default function useGetLessons() {
         setError(error)
         setIsLoading(false)
       })
-  }, [])
+  }, [user_profile_taker_id])
 
-  return { isLoading, lessons, error }
+  return { isLoading, words, error }
 }

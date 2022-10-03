@@ -40,10 +40,17 @@ const submitLessonAnswer = async (taker_id, lessonAnswering) => {
   return lesson_data
 }
 
+const getWordsLearned = async (user_profile_taker_id) => {
+  return await axiosClient.get(
+    `api/v1/words_learned/?user_profile_taker_id=${user_profile_taker_id}&is_correct=true`,
+  )
+}
+
 //eslint-disable-next-line
 export default {
   getCategories,
   getLesson,
+  getWordsLearned,
   getLessonResult,
   getLessonResults,
   getLessonExists,

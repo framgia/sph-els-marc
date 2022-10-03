@@ -104,6 +104,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "is_profile_updated",
             "following",
             "followers",
+            "lessons_learned",
+            "words_learned",
             "profile_picture",
         )
         read_only_fields = (

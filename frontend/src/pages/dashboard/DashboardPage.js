@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ActivityStream from '../../components/elements/ActivityStream'
+import WordsLearnedStream from '../../components/elements/WordsLearnedStream'
 import FollowerStream from '../../components/elements/FollowerStream'
 import FollowingStream from '../../components/elements/FollowingStream'
 import NavBarLanding from '../../components/elements/NavBarLanding'
@@ -9,7 +10,7 @@ import useProfileDetails from '../../hooks/useProfileDetails'
 
 export default function DashboardPage() {
   const user = JSON.parse(localStorage.getItem('user'))
-  const views = ['Activities', 'Following', 'Followers']
+  const views = ['Activities', 'Following', 'Followers', 'Words Learned']
   const [view, setView] = useState(views[0])
 
   const { isLoading, userData, userPicData } = useProfileDetails(user.pk)
@@ -105,7 +106,7 @@ export default function DashboardPage() {
                       <p className="mb-0">Lessons Completed</p>
                     </div>
                     <p className="mb-0" id="lessons_completed">
-                      0
+                      {userData.lessons_learned}
                     </p>
                   </div>
                   <div className="d-flex mb-6 align-items-center justify-content-between">
@@ -131,7 +132,7 @@ export default function DashboardPage() {
                         Words Learned
                       </p>
                     </div>
-                    <p className="mb-0">0</p>
+                    <p className="mb-0">{userData.words_learned}</p>
                   </div>
                   <Link
                     className="text-decoration-none"
@@ -156,6 +157,12 @@ export default function DashboardPage() {
                   >
                     <span> Feed </span>
                   </button>
+                  <button
+                    onClick={() => setView(views[3])}
+                    className="btn my-2 me-4 w-100 d-flex align-items-center justify-content-center btn-outline-primary"
+                  >
+                    <span> Words Learned </span>
+                  </button>
                 </div>
               </div>
             </section>
@@ -163,6 +170,9 @@ export default function DashboardPage() {
           {view === views[0] && <ActivityStream />}
           {view === views[1] && <FollowingStream following={following} />}
           {view === views[2] && <FollowerStream followers={followers} />}
+          {view === views[3] && (
+            <WordsLearnedStream user_profile_taker_id={user.pk} />
+          )}
         </section>
         <Footer />
       </>
