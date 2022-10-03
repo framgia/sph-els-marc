@@ -22,6 +22,12 @@ class ChoiceSerializer(serializers.ModelSerializer):
         read_only_fields = ("word_id",)
 
 
+class ChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = ("choice_text",)
+
+
 class CategoryNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -31,17 +37,31 @@ class CategoryNameSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ("word_id", "answer_text")
-        read_only_fields = ("word_id",)
-        # depth = 1
+        fields = ("answer_text",)
+
+
+class WordCatSerializer(serializers.ModelSerializer):
+    choices = ChoiceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Word
+        fields = (
+            "word_text",
+            "choices",
+        )
+
+    def to_representation(self, instance):
+        choices = Choice.objects.filter(word=instance)
+        setattr(instance, "choices", choices)
+        answer = Answer.objects.get(word=instance)
+        setattr(instance, "answer", answer)
+        return super().to_representation(instance)
 
 
 class WordSerializer(serializers.ModelSerializer):
     category = CategoryNameSerializer(read_only=False)
     choices = ChoiceSerializer(many=True, read_only=False)
     answer = AnswerSerializer(read_only=False)
-    # answer = serializers.CharField(source="answer.answer_text")
-    # choices = serializers.SerializerMethodField()
 
     class Meta:
         model = Word
@@ -53,6 +73,7 @@ class WordSerializer(serializers.ModelSerializer):
             "answer",
         )
         read_only_fields = ("id",)
+        write_only_fields = ("category",)
 
     def get_category(self, obj):
         return obj.category.category_name
@@ -100,6 +121,8 @@ class WordSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    words = WordCatSerializer(many=True, read_only=True)
+
     class Meta:
         model = Category
         fields = (
@@ -109,5 +132,31 @@ class CategorySerializer(serializers.ModelSerializer):
             "num_items",
             "created_at",
             "updated_at",
+            "words",
         )
-        read_only_fields = ("id", "num_items", "created_at", "updated_at")
+        read_only_fields = ("id", "num_items", "created_at", "updated_at", "words")
+
+
+class WordRecordSerializer(serializers.ModelSerializer):
+    word_taken = serializers.CharField(source="word_taken.word_text")
+    correct_answer = serializers.CharField(source="correct_answer.answer_text")
+
+    class Meta:
+        model = WordRecord
+        fields = ("word_taken", "correct_answer", "is_correct")
+
+
+class QuizRecordSerializer(serializers.ModelSerializer):
+
+    words_learned = serializers.SerializerMethodField()
+    category_taken = serializers.CharField(source="category_taken.category_name")
+    user_profile_taker = serializers.CharField(source="user_profile_taker.user.username")
+
+    class Meta:
+        model = QuizRecord
+        fields = ("id", "user_profile_taker", "category_taken", "score", "total", "words_learned")
+
+    def get_words_learned(self, obj: QuizRecord) -> List[WordRecord]:
+        query_set = WordRecord.objects.filter(quiz_record=obj)
+        serializer = WordRecordSerializer(query_set, many=True)
+        return serializer.data

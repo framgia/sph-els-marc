@@ -8,7 +8,7 @@ from dj_rest_auth.views import PasswordResetConfirmView
 from elearning.views import LessonAnsweringPostView, LessonResultExistsView
 
 urlpatterns = [
-    path("admin", admin.site.urls),
+    path("admin/", admin.site.urls),
     path("api/v1/", include("api.urls")),
     path(
         "dj-rest-auth/",

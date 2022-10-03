@@ -4,6 +4,7 @@ import ActivityStream from '../../components/elements/ActivityStream'
 import FollowerStream from '../../components/elements/FollowerStream'
 import FollowingStream from '../../components/elements/FollowingStream'
 import NavBarLanding from '../../components/elements/NavBarLanding'
+import Footer from '../../components/Footer'
 import useProfileDetails from '../../hooks/useProfileDetails'
 
 export default function DashboardPage() {
@@ -21,7 +22,7 @@ export default function DashboardPage() {
       <>
         <NavBarLanding />
 
-        <section id="dash" className="row">
+        <section id="dash" className="row py-6 mx-20">
           <div className="col-12 col-lg-6">
             <section className="py-6">
               <div className="container">
@@ -163,6 +164,7 @@ export default function DashboardPage() {
           {view === views[1] && <FollowingStream following={following} />}
           {view === views[2] && <FollowerStream followers={followers} />}
         </section>
+        <Footer />
       </>
     )
   }

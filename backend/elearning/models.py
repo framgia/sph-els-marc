@@ -102,6 +102,11 @@ class QuizRecord(models.Model):
         self.user_profile_taker.save()
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        self.user_profile_taker.lessons_learned -= 1
+        self.user_profile_taker.save()
+        super().delete(*args, **kwargs)
+
 
 class WordRecord(models.Model):
     class Meta:
@@ -123,3 +128,9 @@ class WordRecord(models.Model):
             self.user_profile_taker.words_learned += 1
             self.user_profile_taker.save()
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.is_correct:
+            self.user_profile_taker.words_learned -= 1
+            self.user_profile_taker.save()
+        super().delete(*args, **kwargs)

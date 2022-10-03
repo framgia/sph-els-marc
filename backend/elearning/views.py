@@ -127,6 +127,7 @@ class LessonResultsViewSet(viewsets.ModelViewSet):
     http_method_names = ["get"]
     my_tags = ["Lesson Results"]
     # TODO: remove when confirmed no longer needed
+    # TODO: To be deleted once confirmed will not be used
     # lookup_field = "user_profile_taker_id"
 
     # def retrieve(self, request, *args, **kwargs):
