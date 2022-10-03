@@ -1,9 +1,5 @@
 import { axiosClient } from './client/axiosClient'
 
-const getCategories = () => {
-  return axiosClient.get('api/v1/category/')
-}
-
 const getUserProfiles = () => {
   return axiosClient.get('api/v1/profile/')
 }
@@ -51,7 +47,6 @@ const deleteUserFollowing = async (fwr, fwing) => {
 
 //eslint-disable-next-line
 export default {
-  getCategories,
   getProfilePicture,
   getUserProfiles,
   getUserProfile,
