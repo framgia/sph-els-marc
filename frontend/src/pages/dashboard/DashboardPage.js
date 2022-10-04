@@ -7,6 +7,7 @@ import FollowingStream from '../../components/elements/FollowingStream'
 import NavBarLanding from '../../components/elements/NavBarLanding'
 import Footer from '../../components/Footer'
 import useProfileDetails from '../../hooks/useProfileDetails'
+import useGetAllActivities from '../../hooks/useGetAllActivities'
 
 export default function DashboardPage() {
   const user = JSON.parse(localStorage.getItem('user'))
@@ -14,8 +15,13 @@ export default function DashboardPage() {
   const [view, setView] = useState(views[0])
 
   const { isLoading, userData, userPicData } = useProfileDetails(user.pk)
+  const {
+    isLoading: isLoadingActivity,
+    activities,
+    error,
+  } = useGetAllActivities(user.pk)
 
-  if (isLoading) {
+  if (isLoading || isLoadingActivity) {
     return <div>Loading...</div>
   } else {
     const { followers, following } = userData
@@ -166,7 +172,13 @@ export default function DashboardPage() {
               </div>
             </section>
           </div>
-          {view === views[0] && <ActivityStream />}
+          {view === views[0] && (
+            <ActivityStream
+              isLoadingActivity={isLoadingActivity}
+              activities={activities}
+              error={error}
+            />
+          )}
           {view === views[1] && <FollowingStream following={following} />}
           {view === views[2] && <FollowerStream followers={followers} />}
           {view === views[3] && (

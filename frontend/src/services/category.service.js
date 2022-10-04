@@ -69,6 +69,10 @@ const getWordsLearned = async (user_profile_taker_id) => {
   )
 }
 
+const getAllActivities = async (id) => {
+  return await axiosClient.get(`/api/v1/activities/${id}`)
+}
+
 //eslint-disable-next-line
 export default {
   getCategories,
@@ -83,4 +87,5 @@ export default {
   updateCategory,
   deleteCategory,
   submitLessonAnswer,
+  getAllActivities,
 }

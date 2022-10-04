@@ -7,6 +7,7 @@ import FollowingStream from '../../components/elements/FollowingStream'
 import NavBarLanding from '../../components/elements/NavBarLanding'
 import Footer from '../../components/Footer'
 import useProfileDetails from '../../hooks/useProfileDetails'
+import useGetAllActivities from '../../hooks/useGetAllActivities'
 
 export default function ProfilePage() {
   const { id } = useParams()
@@ -15,12 +16,17 @@ export default function ProfilePage() {
   const [view, setView] = useState(views[0])
 
   const { isLoading, userData, userPicData } = useProfileDetails(id)
+  const {
+    isLoading: isLoadingActivity,
+    activities,
+    error,
+  } = useGetAllActivities(user.pk)
 
   if (userData.error) {
     return <Navigate to="/404/user-not-found" replace />
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingActivity) {
     return <div>Loading...</div>
   } else {
     const { followers, following } = userData
@@ -113,7 +119,7 @@ export default function ProfilePage() {
                       <p className="mb-0">Lessons Completed</p>
                     </div>
                     <p className="mb-0" id="lessons_completed">
-                      0
+                      {userData.lessons_learned}
                     </p>
                   </div>
                   <div className="d-flex mb-6 align-items-center justify-content-between">
@@ -139,7 +145,7 @@ export default function ProfilePage() {
                         Words Learned
                       </p>
                     </div>
-                    <p className="mb-0">0</p>
+                    <p className="mb-0">{userData.words_learned}</p>
                   </div>
 
                   {!(user.pk === +id) && (
@@ -153,7 +159,13 @@ export default function ProfilePage() {
               </div>
             </section>
           </div>
-          {view === views[0] && <ActivityStream />}
+          {view === views[0] && (
+            <ActivityStream
+              isLoadingActivity={isLoadingActivity}
+              activities={activities}
+              error={error}
+            />
+          )}
           {view === views[1] && <FollowingStream following={following} />}
           {view === views[2] && <FollowerStream followers={followers} />}
         </section>
