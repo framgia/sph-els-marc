@@ -1,3 +1,4 @@
+import traceback
 from typing import List
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -5,13 +6,13 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from pydantic import BaseModel
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_typed.serializers import TSerializer
 from rest_typed.views import typed_api_view
 
-from eprofile.models import UserProfile
+from eprofile.models import UserFollowing, UserProfile
 
-from .models import Answer, Category, Choice, QuizRecord, Word, WordRecord
+from .models import Answer, Category, QuizRecord, Word, WordRecord
 from .serializers import (
     CategorySerializer,
     QuizRecordSerializer,
@@ -66,7 +67,7 @@ class LessonAnsweringSchema(BaseModel):
     tags=["Lesson Answering"],
 )
 @typed_api_view(["POST"])
-def LessonAnsweringPostView(taker_id: int, lesson: LessonAnsweringSchema):
+def lesson_answering_post_view(taker_id: int, lesson: LessonAnsweringSchema):
     lesson_dict = lesson.dict()
     user_profile_taker = UserProfile.objects.get(id=taker_id)
     category_taken = Category.objects.get(id=lesson_dict["category_id"])
@@ -110,7 +111,6 @@ def LessonAnsweringPostView(taker_id: int, lesson: LessonAnsweringSchema):
             is_correct=word["is_correct"],
             correct_answer_id=answer_ob.word_id,
         )
-    # For React, we need to return a JSON object
 
     response_dict = {
         "id": quiz_record.id,
@@ -147,7 +147,7 @@ class LessonResultsViewSet(viewsets.ModelViewSet):
     tags=["Lesson Results"],
 )
 @typed_api_view(["GET"])
-def LessonResultExistsView(category_taken_id: int, taker_id: int):
+def lesson_result_exists_view(category_taken_id: int, taker_id: int):
     try:
         category_taken = Category.objects.get(id=int(category_taken_id))
         taker = UserProfile.objects.get(id=int(taker_id))
@@ -167,3 +167,59 @@ class WordRecordViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["user_profile_taker_id", "quiz_record_id", "is_correct"]
     my_tags = ["Words Learned"]
+
+
+@swagger_auto_schema(
+    method="get",
+    responses={200: openapi.Schema(type=openapi.TYPE_INTEGER)},
+    tags=["All Activities"],
+)
+@typed_api_view(["GET"])
+def all_activities_view(pk: int):
+    try:
+        user_profile = UserProfile.objects.get(id=pk)
+        user_following = UserFollowing.objects.filter(follower=user_profile)
+        users_id = [pk]
+        for entry in user_following:
+            users_id.append(entry.following.id)
+
+        quiz_records = QuizRecord.objects.filter(user_profile_taker_id__in=users_id).order_by(
+            "-created_at"
+        )
+
+        following = UserFollowing.objects.filter(follower__in=users_id)
+
+        dashboard_activities = {
+            "user_id": pk,
+            "activities": [],
+        }
+
+        for record in following:
+            activity = {
+                "user_id": record.follower.id,
+                "user_name": record.follower.user.username,
+                "user_profile_picture": record.follower.user_profile_picture.profile_picture.url,
+                "activity_type": "follow",
+                "follower": record.follower.user.username,
+                "following": record.following.user.username,
+                "created_at": record.created_at,
+            }
+            dashboard_activities["activities"].append(activity)
+
+        for record in quiz_records:
+            activity = {
+                "user_id": record.user_profile_taker.id,
+                "user_name": record.user_profile_taker.user.username,
+                "activity_type": "quiz",
+                "user_profile_picture": record.user_profile_taker.user_profile_picture.profile_picture.url,
+                "category_taken": record.category_taken.category_name,
+                "score": record.score,
+                "total": record.total,
+                "created_at": record.created_at,
+            }
+            dashboard_activities["activities"].append(activity)
+
+        return Response(dashboard_activities, status.HTTP_200_OK)
+    except:
+        traceback.print_exc()
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
