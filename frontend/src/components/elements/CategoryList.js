@@ -33,9 +33,10 @@ export default function CategoryList({ lessons }) {
   return (
     <section className="py-6 mx-lg-20">
       <div className="container">
-        {lessons['results'].map((lesson, index) => (
-          <CategoryCard lesson={lesson} key={index} />
-        ))}
+        {lessons.length > 0 &&
+          lessons.map((lesson, index) => (
+            <CategoryCard lesson={lesson} key={index} />
+          ))}
       </div>
     </section>
   )
