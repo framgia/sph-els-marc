@@ -154,3 +154,17 @@ class QuizRecordSerializer(serializers.ModelSerializer):
         query_set = WordRecord.objects.filter(quiz_record=obj)
         serializer = WordRecordSerializer(query_set, many=True)
         return serializer.data
+
+
+class LessonExistsSerializer(serializers.Serializer):
+    exists = serializers.BooleanField()
+
+    class Meta:
+        fields = ("exists",)
+
+    def to_representation(self, instance):
+        if instance:
+            setattr(instance, "exists", True)
+        else:
+            setattr(instance, "exists", False)
+        return super().to_representation(instance)

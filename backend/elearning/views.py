@@ -15,6 +15,7 @@ from eprofile.models import UserFollowing, UserProfile
 from .models import Answer, Category, QuizRecord, Word, WordRecord
 from .serializers import (
     CategorySerializer,
+    LessonExistsSerializer,
     QuizRecordSerializer,
     WordRecordSerializer,
     WordSerializer,
@@ -142,24 +143,20 @@ class LessonResultsViewSet(viewsets.ModelViewSet):
     #    self.queryset = QuizRecord.objects.filter(user_profile_taker=user_profile)
     #    return super(LessonResultsViewSet, self).retrieve(request, *args, **kwargs)
 
-
-@swagger_auto_schema(
-    method="get",
-    responses={200: openapi.Schema(type=openapi.TYPE_INTEGER)},
-    tags=["Lesson Results"],
-)
-@typed_api_view(["GET"])
-def lesson_result_exists_view(category_taken_id: int, taker_id: int):
-    try:
-        category_taken = Category.objects.get(id=int(category_taken_id))
-        taker = UserProfile.objects.get(id=int(taker_id))
-        QuizRecord.objects.get(user_profile_taker=taker, category_taken=category_taken)
-    except:
-        results_dict = {"exists": False}
-        return Response(results_dict, status.HTTP_200_OK)
-
-    results_dict = {"exists": True}
-    return Response(results_dict, status.HTTP_200_OK)
+    @action(detail=False, methods=["get"])
+    def exists(self, request):
+        user_profile_taker_id = request.query_params.get("user_profile_taker_id")
+        category_taken_id = request.query_params.get("category_taken_id")
+        try:
+            category_taken = Category.objects.get(id=category_taken_id)
+            user_profile_taker = UserProfile.objects.get(id=user_profile_taker_id)
+            quiz_record = QuizRecord.objects.get(
+                user_profile_taker=user_profile_taker, category_taken=category_taken
+            )
+            serializer = LessonExistsSerializer(quiz_record)
+            return Response(serializer.data, status.HTTP_200_OK)
+        except:
+            return Response({"exists": False}, status.HTTP_200_OK)
 
 
 class WordRecordViewSet(viewsets.ModelViewSet):
