@@ -1,6 +1,8 @@
 const Pagination = ({
   count,
   page,
+  totalPages,
+  pageSize,
   nextPage,
   previousPage,
   setCount,
@@ -8,10 +10,6 @@ const Pagination = ({
   setNextPage,
   setPreviousPage,
 }) => {
-  const calculatePagesCount = (pageSize, totalCount) => {
-    return totalCount < pageSize ? 1 : Math.ceil(totalCount / pageSize)
-  }
-
   const handlePageChange = (page) => {
     setPage(page)
   }
@@ -55,26 +53,22 @@ const Pagination = ({
             </button>
           </li>
         )}
-        {/* TODO: Create Custom Pagination Serializer */}
-        {Array.from(Array(calculatePagesCount(10, count)).keys()).map(
-          (pageNumber) => {
-            return (
-              <li
-                className={`page-item ${
-                  pageNumber + 1 === page ? 'active' : ''
-                }`}
-                key={pageNumber}
+
+        {Array.from(Array(totalPages).keys()).map((pageNumber) => {
+          return (
+            <li
+              className={`page-item ${pageNumber + 1 === page ? 'active' : ''}`}
+              key={pageNumber}
+            >
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(pageNumber + 1)}
               >
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(pageNumber + 1)}
-                >
-                  {pageNumber + 1}
-                </button>
-              </li>
-            )
-          },
-        )}
+                {pageNumber + 1}
+              </button>
+            </li>
+          )
+        })}
         {nextPage && (
           <li className="page-item">
             <button className="page-link" onClick={handleNextPage}>

@@ -7,6 +7,8 @@ const CategoriesTable = ({
   lessons,
   count,
   page,
+  totalPages,
+  pageSize,
   nextPage,
   previousPage,
   setCount,
@@ -93,6 +95,8 @@ const CategoriesTable = ({
             <Pagination
               count={count}
               page={page}
+              totalPages={totalPages}
+              pageSize={pageSize}
               nextPage={nextPage}
               previousPage={previousPage}
               setCount={setCount}
