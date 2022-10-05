@@ -1,12 +1,12 @@
 import { axiosClient } from './client/axiosClient'
 
 const getUserProfiles = () => {
-  return axiosClient.get('api/v1/profile/')
+  return axiosClient.get('profile/')
 }
 
 const getUserProfile = async (id) => {
   try {
-    const profile_get = await axiosClient.get(`api/v1/profile/${id}/`)
+    const profile_get = await axiosClient.get(`profile/${id}/`)
 
     return profile_get
   } catch (err) {
@@ -14,13 +14,9 @@ const getUserProfile = async (id) => {
   }
 }
 
-const getProfilePicture = (id) => {
-  return axiosClient.get(`api/profile/${id}/picture/`)
-}
-
 const postUserFollowing = async (postfollower, postfollowing) => {
   try {
-    const profile_post = await axiosClient.post(`api/v1/following/`, {
+    const profile_post = await axiosClient.post(`following/`, {
       follower: postfollower,
       following: postfollowing,
     })
@@ -33,7 +29,7 @@ const postUserFollowing = async (postfollower, postfollowing) => {
 
 const deleteUserFollowing = async (fwr, fwing) => {
   try {
-    const profile_post = await axiosClient.delete(`api/v1/following/delete/`, {
+    const profile_post = await axiosClient.delete(`following/delete/`, {
       data: {
         follower: fwr,
         following: fwing,
@@ -47,7 +43,6 @@ const deleteUserFollowing = async (fwr, fwing) => {
 
 //eslint-disable-next-line
 export default {
-  getProfilePicture,
   getUserProfiles,
   getUserProfile,
   postUserFollowing,
