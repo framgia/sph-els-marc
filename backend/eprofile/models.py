@@ -61,18 +61,18 @@ class UserFollowing(models.Model):
         ]
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         self.follower.following_count += 1
         self.follower.save()
         self.following.follower_count += 1
         self.following.save()
-        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
         self.follower.following_count -= 1
         self.follower.save()
         self.following.follower_count -= 1
         self.following.save()
-        super().delete(*args, **kwargs)
 
 
 @receiver(post_save, sender=User)

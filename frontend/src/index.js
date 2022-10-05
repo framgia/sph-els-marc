@@ -12,7 +12,7 @@ const root = createRoot(container)
 root.render(
   <CookiesProvider>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter forceRefresh={true}>
         <App />
       </BrowserRouter>
     </Provider>
