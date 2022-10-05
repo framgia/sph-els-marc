@@ -18,7 +18,9 @@ const WordsLearnedStream = ({ user_profile_taker_id }) => {
                   <span className="fw-bold fs-3"> Answers </span>
                 </div>
               </div>
-              {words &&
+              {!isLoading &&
+                !error &&
+                words &&
                 words.map((word, index) => (
                   <div className="row" key={index}>
                     <div className="col-6 col-lg-6">

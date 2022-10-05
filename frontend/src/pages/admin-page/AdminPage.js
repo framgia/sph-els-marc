@@ -12,6 +12,8 @@ const AdminPage = () => {
   const [loading, setLoading] = useState(false)
   const [lessons, setLessons] = useState([])
   const [error, setError] = useState(null)
+  const [totalPages, setTotalPages] = useState(0)
+  const [pageSize, setPageSize] = useState(10)
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -22,6 +24,8 @@ const AdminPage = () => {
         setNextPage(response.data.next)
         setPreviousPage(response.data.previous)
         setCount(response.data.count)
+        setTotalPages(response.data.total_pages)
+        setPageSize(response.data.page_size)
       } catch (e) {
         setError(e)
       }
@@ -38,6 +42,8 @@ const AdminPage = () => {
           lessons={lessons}
           count={count}
           page={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
           nextPage={nextPage}
           previousPage={previousPage}
           setCount={setCount}
