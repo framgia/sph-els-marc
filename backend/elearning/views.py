@@ -204,6 +204,8 @@ def all_activities_view(pk: int):
                 "activity_type": "follow",
                 "follower": record.follower.user.username,
                 "following": record.following.user.username,
+                "follower_id": record.follower.id,
+                "following_id": record.following.id,
                 "created_at": record.created_at,
             }
             dashboard_activities["activities"].append(activity)
@@ -215,6 +217,7 @@ def all_activities_view(pk: int):
                 "activity_type": "quiz",
                 "user_profile_picture": record.user_profile_taker.user_profile_picture.profile_picture.url,
                 "category_taken": record.category_taken.category_name,
+                "category_id": record.category_taken.id,
                 "score": record.score,
                 "total": record.total,
                 "created_at": record.created_at,
