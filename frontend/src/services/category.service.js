@@ -14,7 +14,7 @@ const getLessonResult = async (category_taken_id, user_profile_taker_id) => {
 
 const getLessonExists = async (category_taken_id, user_profile_taker_id) => {
   const exists_data = await axiosClient.get(
-    `api/v1/lesson_results/${category_taken_id}/${user_profile_taker_id}/`,
+    `api/v1/lesson_results/exists/?user_profile_taker_id=${user_profile_taker_id}&category_taken_id=${category_taken_id}`,
   )
   return exists_data
 }
