@@ -24,6 +24,8 @@ from .serializers import (
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by("-created_at")
     serializer_class = CategorySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["category_name"]
     http_method_names = ["get", "post", "put", "delete"]
     my_tags = ["Categories"]
 
@@ -131,7 +133,7 @@ class LessonResultsViewSet(viewsets.ModelViewSet):
     filterset_fields = ["user_profile_taker_id", "category_taken_id"]
     http_method_names = ["get"]
     my_tags = ["Lesson Results"]
-    # TODO: will remove when confirmed that this is not needed
+    # TODO: remove when confirmed no longer needed
     # lookup_field = "user_profile_taker_id"
 
     # def retrieve(self, request, *args, **kwargs):

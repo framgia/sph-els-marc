@@ -19,8 +19,21 @@ const getLessonExists = async (category_taken_id, user_profile_taker_id) => {
   return exists_data
 }
 
-const getCategories = () => {
-  return axiosClient.get('api/v1/category/')
+const getCategories = (category_name, page) => {
+  if (page === undefined) {
+    page = 1
+  }
+  if (category_name === undefined) {
+    category_name = ''
+  }
+
+  if (category_name === '' || category_name === undefined) {
+    return axiosClient.get(`api/v1/category/?page=${page}`)
+  } else {
+    return axiosClient.get(
+      `api/v1/category/?page=${page}&category_name=${category_name}`,
+    )
+  }
 }
 
 const getCategoriesByPage = (page) => {

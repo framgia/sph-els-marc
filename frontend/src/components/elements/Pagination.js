@@ -55,8 +55,8 @@ const Pagination = ({
             </button>
           </li>
         )}
-
-        {Array.from(Array(calculatePagesCount(5, count)).keys()).map(
+        {/* TODO: Create Custom Pagination Serializer */}
+        {Array.from(Array(calculatePagesCount(10, count)).keys()).map(
           (pageNumber) => {
             return (
               <li
