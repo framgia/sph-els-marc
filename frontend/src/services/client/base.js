@@ -14,7 +14,6 @@ const submitLogin = async (user, pass) => {
       const profileresp = await getProfileInfo(inforesp.data.pk)
       if (profileresp.status === 200) {
         const profiledata = profileresp.data
-        //localStorage.setItem('profile', JSON.stringify(profiledata))
         data['is_admin'] = profiledata.user.is_superuser
         localStorage.setItem('user', JSON.stringify(data))
         return data
@@ -41,7 +40,7 @@ const getLoggedInInfo = async () => {
 }
 
 const getProfileInfo = async (id) => {
-  const response = await axiosClient.get(`api/v1/profile/${id}/`)
+  const response = await axiosClient.get(`profile/${id}/`)
   return response
 }
 
