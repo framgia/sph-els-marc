@@ -11,10 +11,6 @@ function CategoryCard({ lesson }) {
               <div key={id}>
                 <p className="mb-1 fw-bold text-dark">
                   <span> {category_name} </span>
-                  <span
-                    className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                    style={{ width: 4, height: 4 }}
-                  />
                 </p>
                 <p className="medium mb-0">
                   <span>{category_description}</span>

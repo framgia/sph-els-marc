@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
+import { dateFormatter } from '../../utils'
 
 const FollowerCard = (followers) => {
-  const listItems = [];
-  for (let i = 0; i < followers["followers"].length; i++) {
+  const listItems = []
+  for (let i = 0; i < followers['followers'].length; i++) {
     listItems.push(
       <div className="p-6 mb-4 border rounded-2" key={i}>
         <div className="row align-items-center">
@@ -13,24 +14,29 @@ const FollowerCard = (followers) => {
                 style={{ width: 72, height: 72 }}
               >
                 <img
-                  src={`${process.env.REACT_APP_MEDIA_URL}${followers["followers"][i].profile_picture}`}
-                  alt={`${followers["followers"][i].username}`}
+                  src={`${process.env.REACT_APP_MEDIA_URL}${followers['followers'][i].profile_picture}`}
+                  alt={`${followers['followers'][i].username}`}
                   style={{ width: 60, height: 60 }}
                 />
               </span>
               <div>
-                <Link to={`/profile/${followers["followers"][i].follower}`}>
+                <Link
+                  to={`/profile/${followers['followers'][i].follower}`}
+                  className="text-decoration-none"
+                >
                   <p className="mb-1 fw-bold text-dark">
-                    <span>{followers["followers"][i].username}</span>
-                    <span
-                      className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                      style={{ width: 4, height: 4 }}
-                    />
+                    <span>{followers['followers'][i].username}</span>
                   </p>
                 </Link>
                 <p className="medium mb-0">
-                  <span>{followers["followers"][i].email}</span>
-                  <span className="ms-1">&amp;centerdot; 1h ago</span>
+                  <span>{followers['followers'][i].email}</span>
+                  <span className="ms-1">
+                    {' '}
+                    · {dateFormatter(
+                      followers['followers'][i]['created_at'],
+                    )}{' '}
+                    ago
+                  </span>
                 </p>
               </div>
             </div>
@@ -59,11 +65,11 @@ const FollowerCard = (followers) => {
             </a>
           </div>
         </div>
-      </div>
-    );
+      </div>,
+    )
   }
 
-  return <>{listItems}</>;
-};
+  return <>{listItems}</>
+}
 
-export default FollowerCard;
+export default FollowerCard
