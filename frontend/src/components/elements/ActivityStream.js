@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { dateFormatter } from '../../utils'
+
 const ActivityStream = ({ isLoadingActivity, activities, error }) => {
   return (
     <>
@@ -40,10 +42,6 @@ const ActivityEntry = ({ activity }) => {
             <div>
               <p className="mb-1 fw-bold text-dark">
                 <span className="">{activity.user_name}</span>
-                <span
-                  className="d-inline-block align-middle ms-1 rounded-circle bg-danger"
-                  style={{ width: 4, height: 4 }}
-                />
               </p>
               <p className="medium mb-0">
                 <span>
@@ -90,12 +88,20 @@ const ActivityEntry = ({ activity }) => {
 const ActivityStreamFollow = ({ activity }) => {
   return (
     <span>
-      <Link to={`/profile/${activity.follower_id}`}> {activity.follower} </Link>{' '}
+      <Link
+        to={`/profile/${activity.follower_id}`}
+        className="text-decoration-none text-dark fw-bold"
+      >
+        {activity.follower}
+      </Link>{' '}
       started following{' '}
-      <Link to={`/profile/${activity.following_id}`}>
-        {' '}
-        {activity.following}.{' '}
-      </Link>
+      <Link
+        to={`/profile/${activity.following_id}`}
+        className="text-decoration-none text-dark fw-bold"
+      >
+        {activity.following}
+      </Link>{' '}
+      · {dateFormatter(activity.created_at)} ago
     </span>
   )
 }
@@ -103,12 +109,20 @@ const ActivityStreamFollow = ({ activity }) => {
 const ActivityStreamLesson = ({ activity }) => {
   return (
     <span>
-      <Link to={`/profile/${activity.user_id}`}>{activity.user_name} </Link>{' '}
-      learned {activity.score} of {activity.total} words in{' '}
-      <Link to={`/category/${activity.category_id}`}>
-        {activity.category_taken}
+      <Link
+        to={`/profile/${activity.user_id}`}
+        className="text-decoration-none text-dark fw-bold"
+      >
+        {activity.user_name}{' '}
       </Link>
-      .
+      learned {activity.score} of {activity.total} words in{' '}
+      <Link
+        to={`/category/${activity.category_id}`}
+        className="text-decoration-none text-dark fw-bold"
+      >
+        {activity.category_taken}
+      </Link>{' '}
+      · {dateFormatter(activity.created_at)} ago
     </span>
   )
 }

@@ -4,7 +4,7 @@ import categoryService from '../services/category.service'
 export default function useGetAllActivities(id) {
   const [activities, setActivities] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState({})
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     if (id !== undefined) {

@@ -15,14 +15,19 @@ export default function ProfilePage() {
   const views = ['Activities', 'Following', 'Followers']
   const [view, setView] = useState(views[0])
 
-  const { isLoading, userData, userPicData } = useProfileDetails(id)
+  const {
+    isLoading,
+    userData,
+    userPicData,
+    error: errorProfile,
+  } = useProfileDetails(id)
   const {
     isLoading: isLoadingActivity,
     activities,
     error,
-  } = useGetAllActivities(user.pk)
+  } = useGetAllActivities(id)
 
-  if (userData.error) {
+  if (errorProfile || error) {
     return <Navigate to="/404/user-not-found" replace />
   }
 
@@ -63,7 +68,7 @@ export default function ProfilePage() {
                       <button
                         onClick={() => setView(views[1])}
                         className="col-lg-6 btn d-inline-block
-                        btn-outline-primary m-auto col-12 mb-3 mb-lg-0"
+                        btn-outline-dark m-auto col-12 mb-3 mb-lg-0"
                         href="#dash"
                       >
                         {userData.following_count} Following
@@ -71,7 +76,7 @@ export default function ProfilePage() {
                       <button
                         onClick={() => setView(views[2])}
                         className="col-12 col-lg-6 btn d-inline-block
-                        btn-outline-primary"
+                        btn-outline-dark"
                         href="#dash"
                       >
                         {userData.follower_count} Follower
@@ -122,26 +127,27 @@ export default function ProfilePage() {
                       {userData.lessons_learned}
                     </p>
                   </div>
+
                   <div className="d-flex mb-6 align-items-center justify-content-between">
                     <div className="d-flex align-items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        width={24}
-                        height={24}
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="me-3"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                        />
-                      </svg>
                       <p className="mb-0" id="words_completed">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                          width="24"
+                          height="24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                          className="me-3"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                          ></path>
+                        </svg>
                         Words Learned
                       </p>
                     </div>
@@ -155,6 +161,12 @@ export default function ProfilePage() {
                       following={+id}
                     />
                   )}
+                  <button
+                    onClick={() => setView(views[0])}
+                    className="btn me-4 w-100 d-flex align-items-center my-5 justify-content-center btn-outline-dark"
+                  >
+                    <span> Activities </span>
+                  </button>
                 </div>
               </div>
             </section>
