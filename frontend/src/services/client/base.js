@@ -16,11 +16,12 @@ const submitLogin = async (user, pass) => {
         const profiledata = profileresp.data
         data['is_admin'] = profiledata.user.is_superuser
         localStorage.setItem('user', JSON.stringify(data))
-        return data
+        return [data, response]
       }
     }
   } catch (error) {
     console.error(`Error encountered while logging in: ${error}`)
+    return ['', error]
   }
 }
 
@@ -45,9 +46,11 @@ const getProfileInfo = async (id) => {
 }
 
 const submitLogout = async () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
   const response = await axiosClient.post('dj-rest-auth/logout/')
+  if (response.status === 200) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+  }
   return response
 }
 

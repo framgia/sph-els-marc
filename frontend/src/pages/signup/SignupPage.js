@@ -1,53 +1,68 @@
-import NavBarLanding from "../../components/elements/NavBarLanding";
-import NavBarSideLanding from "../../components/elements/NavBarSideLanding";
-import Footer from "../../components/Footer";
-import { Link } from "react-router-dom";
-import { useFormik } from "formik";
-import { register } from "../../actions/auth";
-import { setMessage } from "../../actions/message";
-import { useSelector, useDispatch } from "react-redux";
-import * as Yup from "yup";
-import Swal from "sweetalert2";
+import NavBarLanding from '../../components/elements/NavBarLanding'
+import NavBarSideLanding from '../../components/elements/NavBarSideLanding'
+import Footer from '../../components/Footer'
+import { Link } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { useSelector, useDispatch } from 'react-redux'
+import authService from '../../services/auth.service'
+import {
+  registerRequest,
+  registerFail,
+  registerSuccess,
+} from '../../slice/auth'
+import * as Yup from 'yup'
+import Swal from 'sweetalert2'
 
 const SignupPage = () => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
-  const dispatch = useDispatch();
+  const { isLoggedIn, message, error } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
 
   const formik = useFormik({
     initialValues: {
-      username: "",
-      email: "",
-      password1: "",
-      password2: "",
+      username: '',
+      email: '',
+      password1: '',
+      password2: '',
     },
     validationSchema: Yup.object().shape({
-      username: Yup.string().required("Username is required"),
+      username: Yup.string().required('Username is required'),
       email: Yup.string()
-        .email("Email must be valid email address")
-        .required("Email is required"),
-      password1: Yup.string().required("Password is required"),
-      password2: Yup.string().required("Confirm Password is required"),
+        .email('Email must be valid email address')
+        .required('Email is required'),
+      password1: Yup.string().required('Password is required'),
+      password2: Yup.string().required('Confirm Password is required'),
     }),
     onSubmit: (values) => {
-      const { username, email, password1, password2 } = values;
-      dispatch(register(username, email, password1, password2));
-    },
-  });
+      const { username, email, password1, password2 } = values
 
-  if (message === "Registration Complete!") {
-    Swal.fire("Registration Success! You may now login!", "", "success").then(
-      (result) => {
-        if (result.isConfirmed) {
-          window.location.href = "/login";
-        }
+      dispatch(registerRequest())
+      if (password1 !== password2) {
+        dispatch(registerFail('Passwords do not match'))
+      } else {
+        authService
+          .register(username, email, password1, password2)
+          .then(() => {
+            dispatch(registerSuccess())
+            Swal.fire(
+              'Registration Success! You may now login!',
+              '',
+              'success',
+            ).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = '/login'
+              }
+            })
+          })
+          .catch((error) => {
+            console.error(error)
+            dispatch(registerFail(error.response.data))
+          })
       }
-    );
-    dispatch(setMessage(""));
-  }
+    },
+  })
 
   if (isLoggedIn) {
-    window.location.href = "/";
+    window.location.href = '/'
   }
 
   return (
@@ -59,8 +74,8 @@ const SignupPage = () => {
         className="py-24 py-lg-36 bg-white"
         style={{
           backgroundImage: 'url("/images/forms/form-1-shadow.png")',
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
           zIndex: -1,
         }}
       >
@@ -157,6 +172,20 @@ const SignupPage = () => {
                   </div>
                 </div>
               )}
+              {error && error['username'] && (
+                <div className="form-group">
+                  <div className="alert alert-danger" role="alert">
+                    {error['username'][0]}
+                  </div>
+                </div>
+              )}
+              {error && (
+                <div className="form-group">
+                  <div className="alert alert-danger" role="alert">
+                    {error}
+                  </div>
+                </div>
+              )}
               <button className="btn btn-primary w-100" type="submit">
                 Sign up
               </button>
@@ -174,7 +203,7 @@ const SignupPage = () => {
       </section>
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage
