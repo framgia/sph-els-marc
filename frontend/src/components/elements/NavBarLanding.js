@@ -42,12 +42,12 @@ function NavBarLanding() {
               </li>
               <li className="nav-item">
                 <Link to="/category/" className="nav-link">
-                  Category
+                  Lessons
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Blog (Soon)
+                <Link to="/profile/" className="nav-link">
+                  Profiles
                 </Link>
               </li>
             </ul>

@@ -13,7 +13,7 @@ const FollowingCard = (following) => {
                 style={{ width: 72, height: 72 }}
               >
                 <img
-                  src={`${process.env.REACT_APP_MEDIA_URL}${following['following'][i].profile_picture}`}
+                  src={`${following['following'][i].profile_picture}`}
                   alt={`${following['following'][i].username}`}
                   style={{ width: 60, height: 60 }}
                 />
