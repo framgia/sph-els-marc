@@ -1,4 +1,4 @@
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { useState } from 'react'
 import LessonDescription from '../../components/elements/LessonDescription'
 import DisplayQuestion from '../../components/elements/DisplayQuestion'
@@ -7,6 +7,7 @@ import Footer from '../../components/Footer'
 import NavBarLanding from '../../components/elements/NavBarLanding'
 import useLessonExists from '../../hooks/useLessonExists'
 import useGetLesson from '../../hooks/useGetLesson'
+import { ReactComponent as LessonFigure } from './lessons.svg'
 
 export default function CategoryPage() {
   const { category_id } = useParams()
@@ -21,10 +22,6 @@ export default function CategoryPage() {
     error: errorLesson,
   } = useGetLesson(+category_id)
 
-  if (exists) {
-    return <Navigate to={`/category/results/${category_id}/`} />
-  }
-
   if (isLoading || isLoadingLesson) {
     return <div>Loading...</div>
   } else if (error || errorLesson) {
@@ -33,21 +30,47 @@ export default function CategoryPage() {
     return (
       <>
         <NavBarLanding />
-        <LessonDescription lesson={lesson} />
         {!quizStart && (
-          <StartButton
-            setQuizStart={setQuizStart}
-            setNumItems={setNumItems}
-            lesson={lesson}
-          />
+          <section className="mx-auto d-flex justify-content-center mb-5">
+            <LessonFigure />
+          </section>
+        )}
+        {exists && (
+          <section className="mx-auto d-flex justify-content-center mb-5">
+            <Link to={`/category/results/${category_id}/`}>
+              <button className="btn btn-outline-dark" type="button">
+                {' '}
+                See Results of {lesson.category_name}
+              </button>
+            </Link>
+          </section>
+        )}
+        {lesson.num_items === 0 && (
+          <section className="mx-auto d-flex justify-content-center mb-5">
+            This lesson ({lesson.category_name}) is not yet finalized (No words
+            to learn yet).
+          </section>
+        )}
+        {!quizStart && !exists && lesson.num_items > 0 && (
+          <>
+            <StartButton
+              setQuizStart={setQuizStart}
+              setNumItems={setNumItems}
+              lesson={lesson}
+            />
+          </>
         )}
         {quizStart && (
-          <DisplayQuestion
-            lesson={lesson}
-            category_id={category_id}
-            taker_id={user.pk}
-            numItems={numItems}
-          />
+          <>
+            <LessonDescription lesson={lesson} />
+
+            <DisplayQuestion
+              lesson={lesson}
+              category_id={category_id}
+              taker_id={user.pk}
+              numItems={numItems}
+            />
+          </>
         )}
         <Footer />
       </>
