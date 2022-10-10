@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
+import WordsLearnedStream from '../../components/elements/WordsLearnedStream'
 import ActivityStream from '../../components/elements/ActivityStream'
 import FollowButton from '../../components/elements/FollowButton'
 import FollowerStream from '../../components/elements/FollowerStream'
@@ -12,7 +13,7 @@ import useGetAllActivities from '../../hooks/useGetAllActivities'
 export default function ProfilePage() {
   const { id } = useParams()
   const user = JSON.parse(localStorage.getItem('user'))
-  const views = ['Activities', 'Following', 'Followers']
+  const views = ['Activities', 'Following', 'Followers', 'Words Learned']
   const [view, setView] = useState(views[0])
 
   const {
@@ -25,7 +26,7 @@ export default function ProfilePage() {
     isLoading: isLoadingActivity,
     activities,
     error,
-  } = useGetAllActivities(id)
+  } = useGetAllActivities(id, 1)
 
   if (errorProfile || error) {
     return <Navigate to="/404/user-not-found" replace />
@@ -154,7 +155,7 @@ export default function ProfilePage() {
                     <p className="mb-0">{userData.words_learned}</p>
                   </div>
 
-                  {!(user.pk === +id) && (
+                  {!(user.pk === +id) && view === views[0] && (
                     <FollowButton
                       action={isFollowing ? 'Unfollow' : 'Follow'}
                       follower={user.pk}
@@ -167,6 +168,12 @@ export default function ProfilePage() {
                   >
                     <span> Activities </span>
                   </button>
+                  <button
+                    onClick={() => setView(views[3])}
+                    className="btn my-2 me-4 w-100 d-flex align-items-center justify-content-center btn-outline-dark"
+                  >
+                    <span> Words Learned </span>
+                  </button>
                 </div>
               </div>
             </section>
@@ -176,10 +183,14 @@ export default function ProfilePage() {
               isLoadingActivity={isLoadingActivity}
               activities={activities}
               error={error}
+              title={'Activities'}
             />
           )}
           {view === views[1] && <FollowingStream following={following} />}
           {view === views[2] && <FollowerStream followers={followers} />}
+          {view === views[3] && (
+            <WordsLearnedStream user_profile_taker_id={user.pk} />
+          )}
         </section>
         <Footer />
       </>

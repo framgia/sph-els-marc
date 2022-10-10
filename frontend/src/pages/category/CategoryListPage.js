@@ -16,6 +16,8 @@ export default function CategoryListPage() {
   const [lessons, setLessons] = useState([])
   const [error, setError] = useState(null)
   const [query, setQuery] = useState('')
+  const [totalPages, setTotalPages] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -26,6 +28,8 @@ export default function CategoryListPage() {
         setNextPage(response.data.next)
         setPreviousPage(response.data.previous)
         setCount(response.data.count)
+        setTotalPages(response.data.total_pages)
+        setPageSize(response.data.page_size)
       } catch (e) {
         setError(e)
       }
@@ -46,6 +50,8 @@ export default function CategoryListPage() {
         <Pagination
           count={count}
           page={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
           nextPage={nextPage}
           previousPage={previousPage}
           setCount={setCount}

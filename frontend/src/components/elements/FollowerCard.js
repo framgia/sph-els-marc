@@ -14,7 +14,7 @@ const FollowerCard = (followers) => {
                 style={{ width: 72, height: 72 }}
               >
                 <img
-                  src={`${process.env.REACT_APP_MEDIA_URL}${followers['followers'][i].profile_picture}`}
+                  src={`${followers['followers'][i].profile_picture}`}
                   alt={`${followers['followers'][i].username}`}
                   style={{ width: 60, height: 60 }}
                 />

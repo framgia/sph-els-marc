@@ -76,14 +76,14 @@ const submitLessonAnswer = async (taker_id, lessonAnswering) => {
   return lesson_data
 }
 
-const getWordsLearned = async (user_profile_taker_id) => {
+const getWordsLearned = async (user_profile_taker_id, page) => {
   return await axiosClient.get(
-    `words_learned/?user_profile_taker_id=${user_profile_taker_id}&is_correct=true`,
+    `words_learned/?user_profile_taker_id=${user_profile_taker_id}&is_correct=true&page=${page}`,
   )
 }
 
-const getAllActivities = async (id) => {
-  return await axiosClient.get(`activities/${id}`)
+const getAllActivities = async (id, own) => {
+  return await axiosClient.get(`activities/${id}/${own}`)
 }
 
 //eslint-disable-next-line

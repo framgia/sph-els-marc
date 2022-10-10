@@ -51,6 +51,14 @@ class FollowingSerializer(serializers.ModelSerializer):
             "profile_picture",
         )
 
+    def get_profile_picture(self, obj):
+        user_profile_picture = UserProfilePicture.objects.get(user_profile=obj.following)
+
+        try:
+            return user_profile_picture.profile_picture.url
+        except:
+            return None
+
 
 class FollowerSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="follower.user.username", read_only=True)
@@ -76,6 +84,15 @@ class FollowerSerializer(serializers.ModelSerializer):
             "profile_picture",
         )
         read_only_fields = ("username", "is_superuser", "email")
+
+    def get_profile_picture(self, obj):
+
+        user_profile_picture = UserProfilePicture.objects.get(user_profile=obj.follower)
+
+        try:
+            return user_profile_picture.profile_picture.url
+        except:
+            return None
 
 
 class UserProfilePictureSerializer(serializers.ModelSerializer):

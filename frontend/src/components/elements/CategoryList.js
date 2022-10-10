@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
+import { dateFormatter } from '../../utils'
 
 function CategoryCard({ lesson }) {
-  const { id, category_name, category_description } = lesson
+  const { id, category_name, category_description, created_at } = lesson
   return (
     <Link className="text-decoration-none text-dark" to={`/category/${id}/`}>
       <div className="p-6 mb-4 border rounded-2">
@@ -14,7 +15,7 @@ function CategoryCard({ lesson }) {
                 </p>
                 <p className="medium mb-0">
                   <span>{category_description}</span>
-                  <span className="ms-1"> 1h ago</span>
+                  <span className="ms-1"> {dateFormatter(created_at)} ago</span>
                 </p>
               </div>
             </div>

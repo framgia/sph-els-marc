@@ -33,16 +33,21 @@ function App() {
   }
 
   const LogoutPage = (isLoggedIn) => {
-    dispatch(logoutRequest())
     useEffect(() => {
+      dispatch(logoutRequest())
       return () => {
-        authService.logout().then(() => {
-          dispatch(logout())
-        })
+        if (isLoggedIn) {
+          authService.logout().then(() => {
+            dispatch(logout())
+            localStorage.removeItem('user')
+            localStorage.removeItem('token')
+          })
+        }
       }
     }, [isLoggedIn])
-
-    return <Navigate to="/" />
+    if (!isLoggedIn) {
+      return <Navigate to="/" replace />
+    }
   }
 
   return (
