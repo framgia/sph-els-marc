@@ -5,9 +5,10 @@ import LoginPage from './pages/login/LoginPage'
 import SignupPage from './pages/signup/SignupPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
 import ProfilePage from './pages/profile/ProfilePage'
-import { useSelector } from 'react-redux'
-import { logout } from './actions/auth'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { logout, logoutRequest } from './slice/auth'
+import authService from './services/auth.service'
 import React from 'react'
 import CategoryListPage from './pages/category/CategoryListPage'
 import CategoryResultsPage from './pages/category-results/CategoryResultsPage'
@@ -32,10 +33,16 @@ function App() {
   }
 
   const LogoutPage = (isLoggedIn) => {
-    if (isLoggedIn) {
-      dispatch(logout())
-      return <Navigate to="/" />
-    }
+    dispatch(logoutRequest())
+    useEffect(() => {
+      return () => {
+        authService.logout().then(() => {
+          dispatch(logout())
+        })
+      }
+    }, [isLoggedIn])
+
+    return <Navigate to="/" />
   }
 
   return (

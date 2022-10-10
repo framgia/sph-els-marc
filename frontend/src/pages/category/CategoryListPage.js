@@ -39,9 +39,10 @@ export default function CategoryListPage() {
       <NavBarLanding />
       <CategorySection />
       <Search setQuery={setQuery} />
-      {loading ? 'Loading' : <CategoryList lessons={lessons} />}
-      {error && <div>Something went wrong</div>}
       <div className="container">
+        {loading ? 'Loading' : <CategoryList lessons={lessons} />}
+        {error && <div>Something went wrong</div>}
+
         <Pagination
           count={count}
           page={page}

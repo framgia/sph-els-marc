@@ -1,15 +1,17 @@
+import { Spinner } from '../../components/elements/Spinner'
 import NavBarLanding from '../../components/elements/NavBarLanding'
 import NavBarSideLanding from '../../components/elements/NavBarSideLanding'
 import Footer from '../../components/Footer'
 import { Link, Navigate } from 'react-router-dom'
 import { useFormik } from 'formik'
-import { login } from '../../actions/auth'
+import authService from '../../services/auth.service'
+import { loginRequest, loginFail, loginSuccess } from '../../slice/auth'
 import { useSelector, useDispatch } from 'react-redux'
+
 import * as Yup from 'yup'
 
 const LoginPage = () => {
-  const { isLoggedIn } = useSelector((state) => state.auth)
-  const { message } = useSelector((state) => state.message)
+  const { message, isLoggedIn, loading } = useSelector((state) => state.auth)
 
   const dispatch = useDispatch()
 
@@ -23,10 +25,24 @@ const LoginPage = () => {
       password: Yup.string().required('Password is required'),
     }),
     onSubmit: (values) => {
+      dispatch(loginRequest())
       const { username, password } = values
-      dispatch(login(username, password))
+
+      authService.login(username, password).then((response) => {
+        const [status, axiosData] = response
+
+        if (axiosData['status'] === 200) {
+          dispatch(loginSuccess(status))
+        } else {
+          dispatch(loginFail(axiosData['response']['data']))
+        }
+      })
     },
   })
+
+  if (loading) {
+    return <Spinner />
+  }
 
   if (isLoggedIn) {
     return <Navigate to="/dashboard" replace />
