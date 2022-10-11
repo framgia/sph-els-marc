@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_typed.views import typed_api_view
 
-from eprofile.models import UserFollowing, UserProfile
+from eprofile.models import UserFollowing, UserProfile, UserProfilePicture
 
 from .models import Answer, Category, QuizRecord, Word, WordRecord
 from .serializers import (
@@ -134,14 +134,6 @@ class LessonResultsViewSet(viewsets.ModelViewSet):
     filterset_fields = ["user_profile_taker_id", "category_taken_id"]
     http_method_names = ["get"]
     my_tags = ["Lesson Results"]
-    # TODO: remove when confirmed no longer needed
-    # lookup_field = "user_profile_taker_id"
-
-    # def retrieve(self, request, *args, **kwargs):
-    #    user_profile_taker_id = kwargs["user_profile_taker_id"]
-    #    user_profile = UserProfile.objects.get(id=user_profile_taker_id)
-    #    self.queryset = QuizRecord.objects.filter(user_profile_taker=user_profile)
-    #    return super(LessonResultsViewSet, self).retrieve(request, *args, **kwargs)
 
     @action(detail=False, methods=["get"])
     def exists(self, request):
@@ -210,11 +202,14 @@ def all_activities_view(pk: int, own: int):
             dashboard_activities["activities"].append(activity)
 
         for record in quiz_records:
+            profile_picture = UserProfilePicture.objects.get(
+                user_profile=record.user_profile_taker
+            )
             activity = {
                 "user_id": record.user_profile_taker.id,
                 "user_name": record.user_profile_taker.user.username,
                 "activity_type": "quiz",
-                "user_profile_picture": record.user_profile_taker.user_profile_picture.profile_picture.url,
+                "user_profile_picture": profile_picture.profile_picture.url,
                 "category_taken": record.category_taken.category_name,
                 "category_id": record.category_taken.id,
                 "score": record.score,
