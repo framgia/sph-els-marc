@@ -7,28 +7,28 @@ function PartnerLogos() {
             Trusted by brands all over the world
           </p>
           <div className="row align-items-center">
-            <div className="col-12 col-sm-6 col-md-3 text-center mb-14 mb-md-0 hidden">
+            <div className="col-12 col-sm-6 col-md-3 text-center mb-14 mb-md-0">
               <img
                 className="img-fluid d-block mx-auto"
                 src="/images/coca-cola-w-xl.svg"
                 alt=""
               />
             </div>
-            <div className="col-12 col-sm-6 col-md-3 text-center mb-14 mb-md-0 hidden">
+            <div className="col-12 col-sm-6 col-md-3 text-center mb-14 mb-md-0">
               <img
                 className="img-fluid d-block mx-auto"
                 src="/images/apple-w-xl.svg"
                 alt=""
               />
             </div>
-            <div className="col-12 col-sm-6 col-md-3 mb-14 mb-sm-0 hidden">
+            <div className="col-12 col-sm-6 col-md-3 mb-14 mb-sm-0">
               <img
                 className="img-fluid d-block mx-auto"
                 src="/images/sunstar-logo2.svg"
                 alt=""
               />
             </div>
-            <div className="col-12 col-sm-6 col-md-3 hidden">
+            <div className="col-12 col-sm-6 col-md-3">
               <img
                 className="img-fluid d-block mx-auto"
                 src="/images/sony-w-xl.svg"
@@ -45,7 +45,7 @@ function PartnerLogos() {
         <div className="p-12 px-32" />
       </div>
     </section>
-  );
+  )
 }
 
-export default PartnerLogos;
+export default PartnerLogos

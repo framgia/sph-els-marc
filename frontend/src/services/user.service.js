@@ -1,7 +1,7 @@
 import { axiosClient } from './client/axiosClient'
 
-const getUserProfiles = () => {
-  return axiosClient.get('profile/')
+const getUserProfiles = (page) => {
+  return axiosClient.get(`profile/?page_size=9&page=${page}`)
 }
 
 const getUserProfile = async (id) => {

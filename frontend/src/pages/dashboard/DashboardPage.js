@@ -34,7 +34,7 @@ export default function DashboardPage() {
             <section className="py-6">
               <div className="container">
                 <div className="position-relative p-8 border rounded-2">
-                  <h3> Dashboard </h3>
+                  <h3> Home </h3>
                   <div className="mb-8 text-center">
                     <img
                       className="img-fluid rounded-2 mb-6"
@@ -48,7 +48,7 @@ export default function DashboardPage() {
                         : userData.user.first_name}
                     </h6>
                     <p className="mb-4">
-                      {userData.user.is_superuser ? 'Admin' : 'Student'}
+                      {userData.user.is_superuser ? 'Expert' : 'Student'}
                     </p>
                     <p>{userData.user.bio ? userData.user.bio : 'No bio. '}</p>
                     <div className="row">
