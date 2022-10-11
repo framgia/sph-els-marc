@@ -13,7 +13,7 @@ export default function useProfileDetails(user_id) {
         setUserData(response.data)
         setUserPicData({
           id: response.data.id,
-          profile_picture: `${process.env.REACT_APP_MEDIA_URL}${response.data.profile_picture}`,
+          profile_picture: `${response.data.profile_picture}`,
         })
       } else {
         setisLoading(false)

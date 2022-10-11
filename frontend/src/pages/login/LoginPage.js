@@ -34,7 +34,10 @@ const LoginPage = () => {
         if (axiosData['status'] === 200) {
           dispatch(loginSuccess(status))
         } else {
-          dispatch(loginFail(axiosData['response']['data']))
+          const errors = axiosData['response']['data']
+          const key = Object.keys(errors)[0]
+          const value = errors[key][0]
+          dispatch(loginFail(`${value}`))
         }
       })
     },

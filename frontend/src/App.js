@@ -14,6 +14,7 @@ import CategoryListPage from './pages/category/CategoryListPage'
 import CategoryResultsPage from './pages/category-results/CategoryResultsPage'
 import CategoryPage from './pages/category-page/CategoryPage'
 import AdminPage from './pages/admin-page/AdminPage'
+import ProfileSettingsPage from './pages/profile-settings/ProfileSettingsPage'
 
 function App() {
   const { isLoggedIn, user } = useSelector((state) => state.auth)
@@ -66,6 +67,10 @@ function App() {
       <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
         <Route path="/dashboard/" element={<DashboardPage />} />
         <Route path="/profile/:id/" element={<ProfilePage />} />
+        <Route
+          path="/profile/:id/settings/"
+          element={<ProfileSettingsPage />}
+        />
         <Route path="/category/" element={<CategoryListPage />} />
         <Route path="/category/:category_id/" element={<CategoryPage />} />
         <Route

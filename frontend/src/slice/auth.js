@@ -21,11 +21,14 @@ const authSlice = createSlice({
     registerRequest: (state) => {
       state.loading = true
       state.message = ''
+      state.error = null
     },
     registerSuccess: (state, action) => {
       state.loading = false
       state.success = true
       state.error = null
+      state.isLoggedIn = true
+      state.user = action.payload
     },
     logoutRequest: (state) => {
       state.loading = true
@@ -34,6 +37,8 @@ const authSlice = createSlice({
     registerFail: (state, action) => {
       state.loading = false
       state.success = false
+      state.isLoggedIn = false
+      state.message = action.payload
       state.error = action.payload
     },
     loginRequest: (state) => {
@@ -51,7 +56,7 @@ const authSlice = createSlice({
       state.loading = false
       state.success = false
       state.isLoggedIn = false
-      state.message = action.payload['non_field_errors'][0]
+      state.message = action.payload
       state.error = action.payload
     },
     logout: (state) => {
