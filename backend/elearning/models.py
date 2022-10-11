@@ -1,4 +1,6 @@
-from django.db import models
+from django.db import models, transaction
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from eprofile.models import UserProfile
 
@@ -18,6 +20,23 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "Categories"
+
+    @transaction.atomic
+    def delete(self, *args, **kwargs):
+        quiz_records = QuizRecord.objects.filter(category_taken=self)
+        word_records = WordRecord.objects.filter(quiz_record__in=quiz_records)
+
+        for word_record in word_records:
+            if word_record.is_correct:
+                word_record.user_profile_taker.words_learned -= 1
+                word_record.user_profile_taker.save()
+        for quiz_record in quiz_records:
+            quiz_record.user_profile_taker.lessons_learned -= 1
+            quiz_record.user_profile_taker.save()
+
+        word_records.delete()
+        quiz_records.delete()
+        super().delete(*args, **kwargs)
 
 
 class Word(models.Model):
@@ -100,11 +119,6 @@ class QuizRecord(models.Model):
         self.user_profile_taker.lessons_learned += 1
         self.user_profile_taker.save()
 
-    def delete(self, *args, **kwargs):
-        self.user_profile_taker.lessons_learned -= 1
-        self.user_profile_taker.save()
-        super().delete(*args, **kwargs)
-
 
 class WordRecord(models.Model):
     class Meta:
@@ -125,10 +139,4 @@ class WordRecord(models.Model):
         super().save(*args, **kwargs)
         if self.is_correct:
             self.user_profile_taker.words_learned += 1
-            self.user_profile_taker.save()
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        if self.is_correct:
-            self.user_profile_taker.words_learned -= 1
             self.user_profile_taker.save()

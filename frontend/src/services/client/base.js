@@ -47,10 +47,7 @@ const getProfileInfo = async (id) => {
 
 const submitLogout = async () => {
   const response = await axiosClient.post('dj-rest-auth/logout/')
-  if (response.status === 200) {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-  }
+
   return response
 }
 

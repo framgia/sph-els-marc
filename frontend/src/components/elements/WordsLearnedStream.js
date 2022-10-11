@@ -1,7 +1,39 @@
-import useGetWordsLearned from '../../hooks/useGetWordsLearned'
+import { useEffect, useState } from 'react'
+import CategoryService from '../../services/category.service'
+import Pagination from './Pagination'
 
 const WordsLearnedStream = ({ user_profile_taker_id }) => {
-  const { isLoading, words, error } = useGetWordsLearned(user_profile_taker_id)
+  const [words, setWords] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState({})
+  const [count, setCount] = useState(0)
+  const [page, setPage] = useState(1)
+  const [nextPage, setNextPage] = useState(null)
+  const [previousPage, setPreviousPage] = useState(null)
+  const [totalPages, setTotalPages] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
+
+  useEffect(() => {
+    CategoryService.getWordsLearned(user_profile_taker_id, page)
+      .then((response) => {
+        if (response.status === 200) {
+          setWords(response.data.results)
+          setIsLoading(false)
+          setError(false)
+          setNextPage(response.data.next)
+          setPreviousPage(response.data.previous)
+          setCount(response.data.count)
+          setTotalPages(response.data.total_pages)
+          setPageSize(response.data.page_size)
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+        setError(error)
+        setIsLoading(false)
+      })
+  }, [user_profile_taker_id, nextPage, previousPage, page])
+
   return (
     <>
       <div className="col-12 col-lg-6">
@@ -9,7 +41,6 @@ const WordsLearnedStream = ({ user_profile_taker_id }) => {
           <div className="container">
             <div className="position-relative p-8 border rounded-2">
               <h3> Words Learned </h3>
-              {/* Make a two column layout */}
               <div className="row my-5">
                 <div className="col-6 col-lg-6">
                   <span className="fw-bold fs-3"> Words </span>
@@ -31,6 +62,20 @@ const WordsLearnedStream = ({ user_profile_taker_id }) => {
                     </div>
                   </div>
                 ))}
+              {words.length > 0 && (
+                <Pagination
+                  count={count}
+                  page={page}
+                  totalPages={totalPages}
+                  pageSize={pageSize}
+                  nextPage={nextPage}
+                  previousPage={previousPage}
+                  setCount={setCount}
+                  setPage={setPage}
+                  setNextPage={setNextPage}
+                  setPreviousPage={setPreviousPage}
+                />
+              )}
             </div>
           </div>
         </section>

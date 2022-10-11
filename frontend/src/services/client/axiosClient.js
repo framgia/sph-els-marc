@@ -11,7 +11,7 @@ const config = {
 }
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost/api/v1/',
+  baseURL: `${process.env.REACT_APP_BASE_URL}`,
   config,
 })
 
