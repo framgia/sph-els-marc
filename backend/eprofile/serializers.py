@@ -23,10 +23,7 @@ class FollowingSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="following.user.first_name", read_only=True)
     last_name = serializers.CharField(source="following.user.last_name", read_only=True)
     email = serializers.CharField(source="following.user.email", read_only=True)
-    profile_picture = serializers.CharField(
-        source="following.user_profile_picture.profile_picture",
-        read_only=True,
-    )
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = UserFollowing
@@ -67,9 +64,7 @@ class FollowerSerializer(serializers.ModelSerializer):
     )
     last_name = serializers.CharField(source="follower.user.last_name", read_only=True)
     email = serializers.CharField(source="follower.user.email", read_only=True)
-    profile_picture = serializers.CharField(
-        source="follower.user_profile_picture.profile_picture", read_only=True
-    )
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = UserFollowing
@@ -86,7 +81,6 @@ class FollowerSerializer(serializers.ModelSerializer):
         read_only_fields = ("username", "is_superuser", "email")
 
     def get_profile_picture(self, obj):
-
         user_profile_picture = UserProfilePicture.objects.get(user_profile=obj.follower)
 
         try:
@@ -104,9 +98,7 @@ class UserProfilePictureSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=False)
-    profile_picture = serializers.CharField(
-        source="user_profile_picture.profile_picture", read_only=True
-    )
+    profile_picture = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
     following = serializers.SerializerMethodField()
 
@@ -133,6 +125,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "followers",
             "following",
         )
+
+    def get_profile_picture(self, obj):
+
+        user_profile_picture = UserProfilePicture.objects.get(user_profile=obj)
+
+        try:
+            return user_profile_picture.profile_picture.url
+        except:
+            return None
 
     def get_following(self, obj):
         return FollowingSerializer(obj.follower.all(), many=True).data

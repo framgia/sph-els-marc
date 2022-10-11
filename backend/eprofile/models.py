@@ -29,7 +29,7 @@ class UserProfile(models.Model):
 
 
 class UserProfilePicture(models.Model):
-    user_profile = models.OneToOneField(
+    user_profile = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name="user_profile_picture"
     )
     profile_picture = models.ImageField(

@@ -69,7 +69,7 @@ class UserFollowingViewSet(viewsets.ModelViewSet):
 
                 content = {
                     "success": "Unfollow success",
-                    "message": f"Following deleted",
+                    "message": "Following deleted",
                 }
             else:
                 return Response(
