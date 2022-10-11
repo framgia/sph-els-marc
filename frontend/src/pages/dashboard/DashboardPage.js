@@ -19,7 +19,7 @@ export default function DashboardPage() {
     isLoading: isLoadingActivity,
     activities,
     error,
-  } = useGetAllActivities(user.pk)
+  } = useGetAllActivities(user.pk, 0)
 
   if (isLoading || isLoadingActivity) {
     return <div>Loading...</div>
@@ -169,6 +169,7 @@ export default function DashboardPage() {
               isLoadingActivity={isLoadingActivity}
               activities={activities}
               error={error}
+              title={'News Feed'}
             />
           )}
           {view === views[1] && <FollowingStream following={following} />}

@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { dateFormatter } from '../../utils'
 
-const ActivityStream = ({ isLoadingActivity, activities, error }) => {
+const ActivityStream = ({ isLoadingActivity, activities, error, title }) => {
   return (
     <>
       <div className="col-12 col-lg-6">
         <section className="py-6">
           <div className="container">
             <div className="position-relative p-8 border rounded-2">
-              <h3> News Feed </h3>
+              <h3> {title} </h3>
               {isLoadingActivity && <p>Loading...</p>}
               {error && <p>Error: {error}</p>}
               {!isLoadingActivity &&

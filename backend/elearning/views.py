@@ -174,13 +174,15 @@ class WordRecordViewSet(viewsets.ModelViewSet):
     tags=["All Activities"],
 )
 @typed_api_view(["GET"])
-def all_activities_view(pk: int):
+def all_activities_view(pk: int, own: int):
     try:
         user_profile = UserProfile.objects.get(id=pk)
         user_following = UserFollowing.objects.filter(follower=user_profile)
         users_id = [pk]
-        for entry in user_following:
-            users_id.append(entry.following.id)
+
+        if not own:
+            for entry in user_following:
+                users_id.append(entry.following.id)
 
         quiz_records = QuizRecord.objects.filter(user_profile_taker_id__in=users_id).order_by(
             "-created_at"
