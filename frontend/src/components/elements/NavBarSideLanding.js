@@ -37,13 +37,13 @@ function NavBarSideDashboard({ open, setOpen }) {
               </Link>
             </li>
             <li className="nav-item py-3">
-              <Link to="/" className="nav-link fw-bold text-dark">
-                Community (Soon)
+              <Link to="/category/" className="nav-link fw-bold text-dark">
+                Lessons
               </Link>
             </li>
             <li className="nav-item py-3">
-              <Link to="/" className="nav-link fw-bold text-dark">
-                Blog (Soon)
+              <Link to="/profile/" className="nav-link fw-bold text-dark">
+                Profiles
               </Link>
             </li>
           </ul>
