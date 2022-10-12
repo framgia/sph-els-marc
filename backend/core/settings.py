@@ -63,6 +63,7 @@ SITE_ID = 1  # django.contrib.sites settings
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -78,6 +79,7 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
     "http://localhost",
     "http://127.0.0.1",
+    "http://127.0.0.1:3000",
 )
 
 CORS_ALLOWED_ORIGINS = [
@@ -197,10 +199,11 @@ USE_TZ = env.bool("USE_TZ", default=False)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 # STATIC_URL = env("STATIC_URL")
-USE_S3 = env.bool("USE_S3", default=False)
+USE_S3 = env.bool("USE_S3", default=True)
 
 if USE_S3:
     # aws settings
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
@@ -218,6 +221,9 @@ if USE_S3:
     AWS_DEFAULT_ACL = "public-read"
     AWS_S3_VERIFY = True
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 else:
     STATIC_URL = "/static/"
     STATIC_ROOT = os.path.join(BASE_DIR, "static")

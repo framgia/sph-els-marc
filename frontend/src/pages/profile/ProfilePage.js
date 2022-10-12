@@ -57,14 +57,19 @@ export default function ProfilePage() {
                       alt=""
                     />
                     <h6 className="fw-bold">
-                      {userData.user.first_name === ''
+                      {userData.user.first_name +
+                        ' ' +
+                        userData.user.last_name ===
+                      ' '
                         ? userData.user.username
-                        : userData.user.first_name}
+                        : userData.user.first_name +
+                          ' ' +
+                          userData.user.last_name}
                     </h6>
                     <p className="mb-4">
                       {userData.user.is_superuser ? 'Admin' : 'Student'}
                     </p>
-                    <p>{userData.user.bio ? userData.user.bio : 'No bio. '}</p>
+                    <p>{userData.bio ? userData.bio : 'No bio. '}</p>
                     <div className="row">
                       <button
                         onClick={() => setView(views[1])}

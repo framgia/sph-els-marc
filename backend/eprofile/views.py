@@ -4,6 +4,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import UserFollowing, UserProfile, UserProfilePicture
 from .serializers import (
@@ -17,16 +18,46 @@ class UserProfilePictureViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
     queryset = UserProfilePicture.objects.all().order_by("-created_at")
     serializer_class = UserProfilePictureSerializer
-    http_method_names = ["get", "put"]
+    http_method_names = ["get"]
     my_tags = ["User Profile Pictures"]
 
 
-class UserProfilePictureViewSet(viewsets.ModelViewSet):
+class UserProfilePictureUploadView(APIView):
     parser_classes = [MultiPartParser, FormParser]
-    queryset = UserProfilePicture.objects.all().order_by("-created_at")
-    serializer_class = UserProfilePictureSerializer
-    http_method_names = ["get", "put"]
-    my_tags = ["User Profile Pictures"]
+
+    @swagger_auto_schema(
+        operation_description="Profile Picture",
+        operation_id="api_v1_profile_picture_upload",
+        tags=["User Profiles"],
+        manual_parameters=[
+            openapi.Parameter(
+                name="profile_picture",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+                description="Document",
+            )
+        ],
+        responses={400: "Invalid data in uploaded file", 200: "Success"},
+    )
+    @action(
+        detail=False,
+        methods=["post"],
+        parser_classes=(
+            MultiPartParser,
+            FormParser,
+        ),
+        name="upload-profile-picture",
+    )
+    def post(self, request, id, format=None):
+        # request.data["eprofile_user_profile_picture.user_profile_id"] = id
+        request.data["user_profile"] = id
+        serializer = UserProfilePictureSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
