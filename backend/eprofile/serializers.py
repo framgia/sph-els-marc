@@ -93,7 +93,16 @@ class UserProfilePictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfilePicture
         fields = ("profile_picture", "user_profile")
-        read_only_fields = ("user_profile", "profile_picture")
+
+    def create(self, validated_data):
+
+        user_profile_picture = UserProfilePicture.objects.get(
+            user_profile=validated_data["user_profile"]
+        )
+        user_profile_picture.profile_picture = validated_data["profile_picture"]
+        user_profile_picture.save()
+
+        return user_profile_picture
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -120,8 +129,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "follower_count",
             "following_count",
-            "is_profile_updated",
             "profile_picture",
+            "lessons_learned",
+            "words_learned",
             "followers",
             "following",
         )

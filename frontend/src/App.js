@@ -15,6 +15,7 @@ import CategoryResultsPage from './pages/category-results/CategoryResultsPage'
 import CategoryPage from './pages/category-page/CategoryPage'
 import AdminPage from './pages/admin-page/AdminPage'
 import ProfileListPage from './pages/profile-list/ProfileListPage'
+import ProfileSettingsPage from './pages/profile-settings/ProfileSettingsPage'
 
 function App() {
   const { isLoggedIn, user } = useSelector((state) => state.auth)
@@ -68,6 +69,10 @@ function App() {
         <Route path="/dashboard/" element={<DashboardPage />} />
         <Route path="/profile/" element={<ProfileListPage />} />
         <Route path="/profile/:id/" element={<ProfilePage />} />
+        <Route
+          path="/profile/:id/settings/"
+          element={<ProfileSettingsPage />}
+        />
         <Route path="/category/" element={<CategoryListPage />} />
         <Route path="/category/:category_id/" element={<CategoryPage />} />
         <Route

@@ -22,4 +22,7 @@ urlpatterns = [
     ),
     path("api/v1/lesson_answering/<int:taker_id>/", lesson_answering_post_view),
     path("api/v1/activities/<int:pk>/<int:own>/", all_activities_view),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

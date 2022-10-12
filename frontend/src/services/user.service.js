@@ -14,6 +14,15 @@ const getUserProfile = async (id) => {
   }
 }
 
+const updateUserProfile = async (id, data) => {
+  try {
+    const profile_update = await axiosClient.put(`profile/${id}/`, data)
+    return profile_update
+  } catch (err) {
+    return err.response
+  }
+}
+
 const postUserFollowing = async (postfollower, postfollowing) => {
   try {
     const profile_post = await axiosClient.post(`following/`, {
@@ -22,6 +31,20 @@ const postUserFollowing = async (postfollower, postfollowing) => {
     })
 
     return profile_post
+  } catch (err) {
+    return err.response
+  }
+}
+
+const uploadProfilePicture = async (id, data, config) => {
+  try {
+    const profile_picture = await axiosClient.post(
+      `profile_picture/upload/${id}/`,
+      data,
+      config,
+    )
+
+    return profile_picture
   } catch (err) {
     return err.response
   }
@@ -47,4 +70,6 @@ export default {
   getUserProfile,
   postUserFollowing,
   deleteUserFollowing,
+  updateUserProfile,
+  uploadProfilePicture,
 }
