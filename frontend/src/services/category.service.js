@@ -30,9 +30,7 @@ const getCategories = (category_name, page) => {
   if (category_name === '' || category_name === undefined) {
     return axiosClient.get(`category/?page=${page}`)
   } else {
-    return axiosClient.get(
-      `category/?page=${page}&category_name=${category_name}`,
-    )
+    return axiosClient.get(`category/?page=${page}&search=${category_name}`)
   }
 }
 
