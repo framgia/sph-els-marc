@@ -106,7 +106,7 @@ def lesson_answering_post_view(taker_id: int, lesson: LessonAnsweringSchema):
 
     for word in list_of_words_correct:
         word_ob = Word.objects.get(word_text=word["word_taken"])
-        answer_ob = Answer.objects.get(answer_text=word["correct_answer"])
+        answer_ob = Answer.objects.get(word=word_ob)
         WordRecord.objects.create(
             quiz_record_id=quiz_record.id,
             user_profile_taker_id=user_profile_taker.id,
@@ -124,7 +124,7 @@ def lesson_answering_post_view(taker_id: int, lesson: LessonAnsweringSchema):
         "words_learned": list_of_words_correct,
     }
 
-    return Response(response_dict)
+    return Response(response_dict, status=status.HTTP_201_CREATED)
 
 
 class LessonResultsViewSet(viewsets.ModelViewSet):
