@@ -2,7 +2,7 @@ import Footer from '../../components/Footer'
 import CategoryService from '../../services/category.service'
 import { useState, useEffect } from 'react'
 import CategoriesTable from '../../components/elements/CategoriesTable'
-import AdminSection from '../../components/elements/AdminSection'
+import NavBarLanding from '../../components/elements/NavBarLanding'
 
 const AdminPage = () => {
   const [count, setCount] = useState(0)
@@ -36,7 +36,7 @@ const AdminPage = () => {
 
   return (
     <>
-      <AdminSection />
+      <NavBarLanding />
       {(!error || !loading) && (
         <CategoriesTable
           lessons={lessons}

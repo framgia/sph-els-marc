@@ -13,6 +13,7 @@ from elearning.views import (
 )
 from eprofile.views import (
     UserFollowingViewSet,
+    UserProfilePictureUploadView,
     UserProfilePictureViewSet,
     UserProfileViewSet,
 )
@@ -47,6 +48,11 @@ urlpatterns = [
         "docs/",
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
+    ),
+    path(
+        "profile_picture/upload/<int:id>/",
+        UserProfilePictureUploadView.as_view(),
+        name="upload-profile-picture",
     ),
     path("profile/", include("eprofile.urls", namespace="profile")),
     path("csrf/", CSRFView.as_view()),

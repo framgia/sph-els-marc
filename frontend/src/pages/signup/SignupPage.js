@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 
 const SignupPage = () => {
-  const { isLoggedIn, message, error } = useSelector((state) => state.auth)
+  const { message } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
 
   const formik = useFormik({
@@ -41,29 +41,32 @@ const SignupPage = () => {
       } else {
         authService
           .register(username, email, password1, password2)
-          .then(() => {
-            dispatch(registerSuccess())
-            Swal.fire(
-              'Registration Success! You may now login!',
-              '',
-              'success',
-            ).then((result) => {
-              if (result.isConfirmed) {
-                window.location.href = '/login'
-              }
-            })
+          .then((response) => {
+            const [status, axiosData] = response
+            if (axiosData['status'] === 201) {
+              dispatch(registerSuccess(status))
+              Swal.fire(
+                'Registration Success! You may now login!',
+                '',
+                'success',
+              ).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/dashboard'
+                }
+              })
+            } else {
+              const errors = axiosData['response']['data']
+              const key = Object.keys(errors)[0]
+              const value = errors[key][0]
+              dispatch(registerFail(`${value}`))
+            }
           })
-          .catch((error) => {
-            console.error(error)
-            dispatch(registerFail(error.response.data))
+          .catch(() => {
+            dispatch(registerFail('Registration failed'))
           })
       }
     },
   })
-
-  if (isLoggedIn) {
-    window.location.href = '/'
-  }
 
   return (
     <>
@@ -172,21 +175,7 @@ const SignupPage = () => {
                   </div>
                 </div>
               )}
-              {error && error['username'] && (
-                <div className="form-group">
-                  <div className="alert alert-danger" role="alert">
-                    {error['username'][0]}
-                  </div>
-                </div>
-              )}
-              {error && (
-                <div className="form-group">
-                  <div className="alert alert-danger" role="alert">
-                    {error}
-                  </div>
-                </div>
-              )}
-              <button className="btn btn-primary w-100" type="submit">
+              <button className="btn btn-dark w-100" type="submit">
                 Sign up
               </button>
             </div>
