@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from pydantic import BaseModel
-from rest_framework import status, viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_typed.views import typed_api_view
@@ -25,8 +25,8 @@ from .serializers import (
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by("-created_at")
     serializer_class = CategorySerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["category_name"]
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ["category_name"]
     http_method_names = ["get", "post", "put", "delete"]
     my_tags = ["Categories"]
 
