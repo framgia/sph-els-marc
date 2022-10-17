@@ -1,19 +1,19 @@
-import { Spinner } from '../../components/elements/Spinner'
-import NavBarLanding from '../../components/elements/NavBarLanding'
-import NavBarSideLanding from '../../components/elements/NavBarSideLanding'
-import Footer from '../../components/Footer'
-import { Link, Navigate } from 'react-router-dom'
-import { useFormik } from 'formik'
-import authService from '../../services/auth.service'
-import { loginRequest, loginFail, loginSuccess } from '../../slice/auth'
-import { useSelector, useDispatch } from 'react-redux'
+import { Spinner } from '../../components/elements/Spinner';
+import NavBarLanding from '../../components/elements/NavBarLanding';
+import NavBarSideLanding from '../../components/elements/NavBarSideLanding';
+import Footer from '../../components/Footer';
+import { Link, Navigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import authService from '../../services/auth.service';
+import { loginRequest, loginFail, loginSuccess } from '../../slice/auth';
+import { useSelector, useDispatch } from 'react-redux';
 
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 const LoginPage = () => {
-  const { message, isLoggedIn, loading } = useSelector((state) => state.auth)
+  const { message, isLoggedIn, loading } = useSelector((state) => state.auth);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -25,30 +25,30 @@ const LoginPage = () => {
       password: Yup.string().required('Password is required'),
     }),
     onSubmit: (values) => {
-      dispatch(loginRequest())
-      const { username, password } = values
+      dispatch(loginRequest());
+      const { username, password } = values;
 
       authService.login(username, password).then((response) => {
-        const [status, axiosData] = response
+        const [status, axiosData] = response;
 
         if (axiosData['status'] === 200) {
-          dispatch(loginSuccess(status))
+          dispatch(loginSuccess(status));
         } else {
-          const errors = axiosData['response']['data']
-          const key = Object.keys(errors)[0]
-          const value = errors[key][0]
-          dispatch(loginFail(`${value}`))
+          const errors = axiosData['response']['data'];
+          const key = Object.keys(errors)[0];
+          const value = errors[key][0];
+          dispatch(loginFail(`${value}`));
         }
-      })
+      });
     },
-  })
+  });
 
   if (loading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   if (isLoggedIn) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to='/dashboard' replace />;
   }
 
   return (
@@ -56,8 +56,8 @@ const LoginPage = () => {
       <NavBarLanding />
       <NavBarSideLanding />
       <section
-        id="login"
-        className="py-24 py-lg-36 bg-white"
+        id='login'
+        className='py-24 py-lg-36 bg-white'
         style={{
           backgroundImage: 'url("/images/forms/form-1-shadow.png")',
           backgroundRepeat: 'no-repeat',
@@ -65,70 +65,76 @@ const LoginPage = () => {
           zIndex: -1,
         }}
       >
-        <div className="container">
-          <div className="text-center mw-sm px-3 mx-auto">
-            <img className="img-fluid" src="images/neuword-logo.svg" alt="" />
-            <h2 className="mb-2 lh-sm mt-6 font-heading">
+        <div className='container'>
+          <div className='text-center mw-sm px-3 mx-auto'>
+            <img className='img-fluid' src='images/neuword-logo.svg' alt='' />
+            <h2 className='mb-2 lh-sm mt-6 font-heading'>
               Log in to your account
             </h2>
-            <p className="mb-6 lh-lg">Please enter your details to proceed.</p>
+            <p className='mb-6 lh-lg'>Please enter your details to proceed.</p>
           </div>
           <form
-            className="text-start mx-auto"
+            className='text-start mx-auto'
             style={{ width: 300 }}
             onSubmit={formik.handleSubmit}
           >
-            <label className="d-block mb-6">
-              <span className="small">Username</span>
+            <label className='d-block mb-6'>
+              <span className='small'>Username</span>
               <input
-                type="text"
-                className="form-control mt-2"
-                name="username"
-                placeholder="Your username"
+                type='text'
+                className='form-control mt-2'
+                name='username'
+                data-testid='login-username'
+                placeholder='Your username'
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.username}
               />
             </label>
             {formik.touched.username && formik.errors.username ? (
-              <span className="error">{formik.errors.username}</span>
+              <span className='error'>{formik.errors.username}</span>
             ) : null}
-            <label className="d-block mb-4">
-              <span className="small">Password</span>
+            <label className='d-block mb-4'>
+              <span className='small'>Password</span>
               <input
-                type="password"
-                className="form-control mt-2"
-                name="password"
-                placeholder="Your password"
+                type='password'
+                className='form-control mt-2'
+                name='password'
+                data-testid='login-password'
+                placeholder='Your password'
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
               />
             </label>
             {formik.touched.password && formik.errors.password ? (
-              <span className="error">{formik.errors.password}</span>
+              <span className='error'>{formik.errors.password}</span>
             ) : null}
-            <label className="d-flex mb-6">
+            <label className='d-flex mb-6'>
               <span style={{ fontSize: 12 }}>
                 <span>By signing up, you agree to our </span>
-                <a className="text-decoration-none" href="#login">
+                <a className='text-decoration-none' href='#login'>
                   Terms, Data Policy, and Cookies Policy.
                 </a>
               </span>
             </label>
             {message && (
-              <div className="form-group">
-                <div className="alert alert-danger" role="alert">
+              <div className='form-group'>
+                <div className='alert alert-danger' role='alert'>
                   {message}
                 </div>
               </div>
             )}
-            <button type="submit" className="btn btn-dark d-block mb-4">
+            <button
+              type='submit'
+              data-testid='login-submit'
+              className='btn btn-dark d-block mb-4'
+            >
               Sign In
             </button>
-            <span className="text-center d-block" style={{ fontSize: 12 }}>
+            <span className='text-center d-block' style={{ fontSize: 12 }}>
               <span>Don’t have an account? </span>
-              <Link to={'/register'} className="text-decoration-none">
+              <Link to={'/register'} className='text-decoration-none'>
                 Sign Up
               </Link>
             </span>
@@ -137,7 +143,7 @@ const LoginPage = () => {
       </section>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
