@@ -4,6 +4,7 @@ import categoryService from '../../services/category.service';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginPage from './LoginPage';
+import LoginForm from './LoginForm';
 import { MemoryRouter } from 'react-router-dom';
 import store from '../../store';
 import { CookiesProvider } from 'react-cookie';
@@ -119,5 +120,40 @@ describe('Test Auth and User Service for login', () => {
     expect(data['activities'][0]['activity_type']).toBe('quiz');
     expect(data['activities'][0]['user_name']).toBe('elearning-admin');
     expect(data['activities'][0]['category_taken']).toBe('Basic 3 Words');
+  });
+});
+
+describe('Render and testing Login form', () => {
+  test('renders login form', async () => {
+    const handleSubmit = jest.fn();
+
+    render(
+      <Provider store={store}>
+        <CookiesProvider>
+          <MemoryRouter>
+            <LoginForm onSubmit={handleSubmit} />
+          </MemoryRouter>
+        </CookiesProvider>
+      </Provider>
+    );
+
+    const user = userEvent.setup();
+
+    const username = screen.getByTestId('login-username');
+    const password = screen.getByTestId('login-password');
+    const submitButton = screen.getByTestId('login-submit');
+
+    expect(username).toBeInTheDocument();
+    expect(password).toBeInTheDocument();
+    expect(submitButton).toBeInTheDocument();
+
+    await user.type(username, 'elearning-admin');
+    await user.type(password, 'wsx123');
+
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalled();
+    });
   });
 });

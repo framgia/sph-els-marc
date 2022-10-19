@@ -2,6 +2,7 @@ import { rest } from 'msw';
 
 const URL = process.env.REACT_APP_BASE_URL;
 const MEDIA_URL = process.env.REACT_APP_MEDIA_URL;
+
 export const handlers = [
   rest.post(`${URL}dj-rest-auth/login/`, (req, res, ctx) => {
     const { username, password } = req.body;
