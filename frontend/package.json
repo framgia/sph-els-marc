@@ -8,7 +8,7 @@
     "@sweetalert2/theme-material-ui": "^5.0.12",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.4.3",
     "axios": "^0.27.2",
     "bootstrap": "^5.1.1",
     "dotenv": "^16.0.2",
@@ -31,6 +31,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
+    "start:msw": "set REACT_APP_USE_MSW_MOCK_API=yes && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -55,6 +56,11 @@
     ]
   },
   "devDependencies": {
+    "msw": "^0.47.4",
+    "nock": "^13.2.9",
     "redux-devtools-extension": "^2.13.9"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
